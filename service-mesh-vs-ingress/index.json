@@ -1,0 +1,33 @@
+{
+  "title": "samples",
+  "description": "When to use service mesh (istio, linkerd,...) instead of ingress in Kubernetes?",
+  "details": {
+      "steps": [
+      {
+        "title": "When should we start using Service Mesh (e.g. Istio, LinkerD, etc.) over ingress in Kubernetes?",
+        "text": "step1/text.md"
+      },
+      {
+        "title": "Explanation Istio",
+        "text": "step2/text.md"
+      }
+
+    ],
+    "finish": {
+      "text": "finish/finish.md"
+    },
+    "intro": {
+      "text": "init/init.md",
+      "background": "init/background.sh",
+      "foreground": "init/foreground.sh"
+    },
+    "assets": {
+      "host01": [
+        {"file": "explanation_diagram_istio.svg", "target": "/ks"}
+      ]
+    }
+  },
+  "backend": {
+    "imageid": "kubernetes-kubeadm-2nodes"
+  }
+}

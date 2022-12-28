@@ -2,6 +2,8 @@
   "items": [
     { "path": "playground" },
     { "path": "samples-helloworld" },
-    { "path": "samples-bookinfo" }
+    { "path": "samples-bookinfo" },
+    { "path": "service-mesh-vs-ingress" }
+    
   ]
 }
