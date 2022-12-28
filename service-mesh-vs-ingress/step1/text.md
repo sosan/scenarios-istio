@@ -1,22 +1,19 @@
-## When to use a service mesh
-A service mesh is a technology that can be used to manage communication between microservices in a distributed system. It provides features such as load balancing, service discovery, and monitoring, and can be used to implement advanced communication patterns, such as retries or circuit breaking.
+## Istio
 
-Consider using a service mesh if you have:
+Istio is an open-source service mesh platform that provides features such as load balancing, service discovery, and monitoring for microservices. It uses a sidecar proxy, which is a separate process that runs alongside each microservice, to intercept and manage communication between services.
 
-- A large, complex system with many microservices
-- A need for fine-grained control over communication between services (mtls)
-- A requirement to support multiple protocols
-- A need to implement advanced communication patterns (e.g. retries, circuit breaking, canary deployments, ...)
+Here is a simplified diagram of how Istio works as a service mesh:
 
-## When to use an ingress controller
-An ingress controller is a service in a Kubernetes cluster that allows inbound connections to reach the cluster. It is typically used to expose HTTP and HTTPS routes from outside the cluster to services within the cluster.
+- A client sends a request to a microservice.
+- The request is intercepted by the sidecar proxy for the microservice.
+- The sidecar proxy forwards the request to the microservice.
+- The microservice processes the request and sends a response back to the sidecar proxy.
+- The sidecar proxy forwards the response back to the client.
+Using a sidecar proxy allows Istio to provide features such as load balancing, service discovery, and monitoring without requiring any changes to the code of the microservices themselves. This makes it easier to manage communication between microservices and to add new features as needed.
 
-Consider using an ingress controller if you have:
 
-- A smaller system with fewer microservices
-- No need for advanced control over communication between services
-- A need to expose HTTP and HTTPS routes from outside the cluster
+![Istio explcation](../assets/explanation_diagram_istio.svg)
 
-## Combining ingress controllers and service mesh
-In some cases, it may make sense to use both an ingress controller and a service mesh in a Kubernetes cluster. For example, you might use an ingress controller to handle incoming requests from outside the cluster and a service mesh to manage communication between services within the cluster.
+This diagram illustrates the process of a client sending a request to a microservice, which is intercepted by the sidecar proxy for that microservice (Sidecar1). The sidecar proxy then forwards the request to the microservice, which processes it and sends a response back to the sidecar proxy. The sidecar proxy then forwards the response back to the client.
 
+Using a sidecar proxy allows Istio to provide features such as load balancing, service discovery, and monitoring without requiring any changes to the code of the microservices themselves. This makes it easier to manage communication between microservices and to add new features as needed.

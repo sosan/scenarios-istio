@@ -1,14 +1,14 @@
 {
-  "title": "samples",
+  "title": "Service mesh vs Ingress",
   "description": "When to use service mesh (istio, linkerd,...) instead of ingress in Kubernetes?",
   "details": {
       "steps": [
       {
-        "title": "When should we start using Service Mesh (e.g. Istio, LinkerD, etc.) over ingress in Kubernetes?",
+        "title": "How Istio Works as a Service Mesh",
         "text": "step1/text.md"
       },
       {
-        "title": "Explanation Istio",
+        "title": "",
         "text": "step2/text.md"
       }
 

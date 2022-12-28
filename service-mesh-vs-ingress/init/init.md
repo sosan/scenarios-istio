@@ -1,4 +1,21 @@
-<br>
+## When to use a service mesh
+A service mesh is a technology that can be used to manage communication between microservices in a distributed system. It provides features such as load balancing, service discovery, and monitoring, and can be used to implement advanced communication patterns, such as retries or circuit breaking.
 
-Explanation
+Consider using a service mesh if you have:
 
+- A large, complex system with many microservices
+- A need for fine-grained control over communication between services (mtls)
+- A requirement to support multiple protocols
+- A need to implement advanced communication patterns (e.g. retries, circuit breaking, canary deployments, ...)
+
+## When to use an ingress controller
+An ingress controller is a service in a Kubernetes cluster that allows inbound connections to reach the cluster. It is typically used to expose HTTP and HTTPS routes from outside the cluster to services within the cluster.
+
+Consider using an ingress controller if you have:
+
+- A smaller system with fewer microservices
+- No need for advanced control over communication between services
+- A need to expose HTTP and HTTPS routes from outside the cluster
+
+## Combining ingress controllers and service mesh
+In some cases, it may make sense to use both an ingress controller and a service mesh in a Kubernetes cluster. For example, you might use an ingress controller to handle incoming requests from outside the cluster and a service mesh to manage communication between services within the cluster.
