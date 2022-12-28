@@ -26,6 +26,7 @@ Using a sidecar proxy allows Istio to provide features such as load balancing, s
 ## Main components of Istio
 
 The main components of Istio include:
+![Main components istio](https://raw.githubusercontent.com/sosan/scenarios-istio/main/service-mesh-vs-ingress/assets/components_istio.svg)
 
 - **Data plane**: The data plane consists of a set of intelligent proxies (Envoy) that are deployed alongside each service in the mesh. These proxies intercept and direct traffic between services, and provide observability, security, and other features to the mesh.
 
@@ -38,7 +39,6 @@ The main components of Istio include:
 Overall, Istio provides a set of tools and components that enable you to manage and secure your microservices-based applications at scale.
 
 
-![Main components istio](https://raw.githubusercontent.com/sosan/scenarios-istio/main/service-mesh-vs-ingress/assets/components_istio.svg)
 
 
 
