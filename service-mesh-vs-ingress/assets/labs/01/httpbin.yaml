@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: httpbin_kong
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpbin_kong
+  labels:
+    app: httpbin_kong
+    service: httpbin_kong
+spec:
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 80
+  selector:
+    app: httpbin_kong
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpbin_kong
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: httpbin_kong
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: httpbin_kong
+        version: v1
+    spec:
+      serviceAccountName: httpbin_kong
+      containers:
+      - image: docker.io/kong/httpbin_kong
+        imagePullPolicy: IfNotPresent
+        name: httpbin_kong
+        ports:
+        - containerPort: 80
