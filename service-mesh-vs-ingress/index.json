@@ -23,7 +23,8 @@
     },
     "assets": {
       "host01": [
-        {"file": "explanation_diagram_istio.svg", "target": "/ks"}
+        {"file": "wait-background.sh", "target": "/ks", "chmod": "+x"},
+        {"file": "demo.yaml", "target": "/tmp", "chmod": "+x"}
       ]
     }
   },
