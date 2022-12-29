@@ -4,12 +4,16 @@
   "details": {
       "steps": [
       {
-        "title": "How Istio Works as a Service Mesh",
+        "title": "How Istio works as a service mesh",
         "text": "step1/text.md"
       },
       {
-        "title": "",
+        "title": "Understanding Envoy",
         "text": "step2/text.md"
+      },
+      {
+        "title": "Lab Envoy",
+        "text": "step3/text.md"
       }
 
     ],
@@ -24,7 +28,8 @@
     "assets": {
       "host01": [
         {"file": "wait-background.sh", "target": "/ks", "chmod": "+x"},
-        {"file": "demo.yaml", "target": "/tmp", "chmod": "+x"}
+        {"file": "demo.yaml", "target": "/tmp", "chmod": "+x"},
+        {"file": "labs/**/*.*", "target": "/root"}
       ]
     }
   },
