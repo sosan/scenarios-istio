@@ -17,7 +17,7 @@ Here is a simplified diagram of how Istio works as a service mesh:
 Using a sidecar proxy allows Istio to provide features such as load balancing, service discovery, and monitoring without requiring any changes to the code of the microservices themselves. This makes it easier to manage communication between microservices and to add new features as needed.
 
 
-![Istio diagram explication](https://raw.githubusercontent.com/sosan/scenarios-istio/main/service-mesh-vs-ingress/assets/explanation_diagram_istio.svg)
+![Istio diagram explication](https://raw.githubusercontent.com/sosan/scenarios-istio/main/service-mesh-vs-ingress/assets/images/explanation_diagram_istio.svg)
 
 This diagram illustrates the process of a client sending a request to a microservice, which is intercepted by the sidecar proxy for that microservice (Sidecar1). The sidecar proxy then forwards the request to the microservice, which processes it and sends a response back to the sidecar proxy. The sidecar proxy then forwards the response back to the client.
 
@@ -26,7 +26,7 @@ Using a sidecar proxy allows Istio to provide features such as load balancing, s
 ## Main components of Istio
 
 The main components of Istio include:
-![Main components istio](https://raw.githubusercontent.com/sosan/scenarios-istio/main/service-mesh-vs-ingress/assets/components_istio.svg)
+![Main components istio](https://raw.githubusercontent.com/sosan/scenarios-istio/main/service-mesh-vs-ingress/assets/images/components_istio.svg)
 
 - **Data plane**: The data plane consists of a set of intelligent proxies (Envoy) that are deployed alongside each service in the mesh. These proxies intercept and direct traffic between services, and provide observability, security, and other features to the mesh.
 
@@ -37,9 +37,3 @@ The main components of Istio include:
 - **Ingress and egress**: Istio provides ingress and egress gateways that allow you to control access to and from the mesh, as well as to route traffic to and from external services.
 
 Overall, Istio provides a set of tools and components that enable you to manage and secure your microservices-based applications at scale.
-
-
-
-
-
-

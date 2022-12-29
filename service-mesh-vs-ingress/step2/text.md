@@ -1,8 +1,8 @@
 ## Sidecar proxy: Envoy
 
-In this lab, we delve into one of the foundational components of Istio: the "data plane".
+We delve into one of the foundational components of Istio: the "data plane".
 
-In Istio, Envoy is deployed as a sidecar container alongside the service it is protecting.
+In Istio, [Envoy Proxy](https://www.envoyproxy.io) is deployed as a sidecar container alongside the service it is protecting.
 
 Envoy is a high-performance proxy designed for modern, complex environments. It acts as a middleman for network communication, routing traffic between services and enforcing policies such as rate limiting and authentication.
 
@@ -23,7 +23,7 @@ Envoy is designed to be resilient and performant, with a focus on high throughpu
 
 Here is a diagram showing how Envoy can be used to route gRPC and HTTP/2 traffic in a microservices architecture:
 
-![Envoy requests](https://raw.githubusercontent.com/sosan/scenarios-istio/main/service-mesh-vs-ingress/assets/diagram_envoy_requests.svg)
+![Envoy requests](https://raw.githubusercontent.com/sosan/scenarios-istio/main/service-mesh-vs-ingress/assets/images/diagram_envoy_requests.svg)
 
 In this diagram, the client makes gRPC and HTTP/2 requests to Envoy, which acts as a proxy and forwards the requests to the appropriate services (in this case, Service A for the gRPC request and Service B for the HTTP/2 request). The services process the requests and send responses back to Envoy, which then forwards the responses to the client.
 
@@ -31,7 +31,7 @@ Envoy can support multiple protocols simultaneously, allowing it to route traffi
 
 Here is a diagram showing the relationship between Envoy and Istio:
 
-![Relation envoy istio](https://raw.githubusercontent.com/sosan/scenarios-istio/main/service-mesh-vs-ingress/assets/relation_envoy_istio.svg)
+![Relation envoy istio](https://raw.githubusercontent.com/sosan/scenarios-istio/main/service-mesh-vs-ingress/assets/images/relation_envoy_istio.svg)
 
 In this diagram, Envoy sits between the client and the service, proxying requests and responses. It also communicates with the Istio control plane, sending request/response metrics and receiving configuration updates. The control plane uses this information to manage the behavior of the service mesh, including routing traffic, enforcing policies, and providing observability.
 
