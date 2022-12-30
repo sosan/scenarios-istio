@@ -45,8 +45,8 @@ spec:
         - containerPort: 15001
         volumeMounts:
           - name: envoy
-            mountPath: /etc/envoy        
+            mountPath: /etc/envoy
       volumes:
         - name: envoy
           configMap:
-            name: envoy        
+            name: envoy
