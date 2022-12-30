@@ -55,7 +55,7 @@ kubectl exec deploy/sleep -- curl http://envoy/headers
 ```{{exec}}
 
 
-> We can observe a response with additional response headers, such as X-Envoy-Expected-Rq-Timeout-Ms, in the output.
+> We can observe a response with additional response headers, such as *X-Envoy-Expected-Rq-Timeout-Ms*, *X-Envoy-Downstream-Service-Cluster*, *X-Envoy-Internal* in the output.
 > ```plain
 > ...
 > "headers": {
@@ -73,7 +73,7 @@ kubectl exec deploy/sleep -- curl http://envoy/headers
 
 
 ```bash
-kubectl create cm envoy --from-file=envoy.yaml=./labs/01/config/envoy-config-timeout.yaml -o yaml --dry-run=client | kubectl apply -f -
+kubectl create cm envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_timeout.yaml -o yaml --dry-run=client | kubectl apply -f -
 kubectl rollout restart deploy/envoy
 ```{{exec}}
 
@@ -83,14 +83,41 @@ kubectl exec deploy/sleep -- curl http://envoy/headers
 ```
 
 ```
-headers
+...
+"headers": {
+    "Accept": "*/*", 
+    "Host": "envoy", 
+    "User-Agent": "curl/7.87.0-DEV", 
+    "X-Envoy-Downstream-Service-Cluster": "", 
+    "X-Envoy-Expected-Rq-Timeout-Ms": "600", 
+    "X-Envoy-Internal": "true"
+  }
 ```
+
+> We observe *X-Envoy-Expected-Rq-Timeout-Ms* changed to *600*
+
+```plain
+kubectl exec deploy/sleep -- curl -v http://envoy/delay/100
+```{{exec}}
 
 
 ```plain
-kubectl exec deploy/sleep -- curl -v http://envoy/delay/5
-```{{exec}}
-
+> * Connected to envoy (10.103.173.213) port 80 (#0)
+> > GET /delay/5 HTTP/1.1
+> > Host: envoy
+> > User-Agent: curl/7.87.0-DEV
+> > Accept: */*
+> > 
+> * Mark bundle as not supporting multiuse
+> < HTTP/1.1 504 Gateway Timeout
+> < upstream request timeoutcontent-length: 24
+> < content-type: text/plain
+> < date: Fri, 30 Dec 2022 23:22:01 GMT
+> < server: envoy
+> < 
+> * Connection #0 to host envoy left intact
+> upstream request timeout
+```
 
 Although this has been straightforward so far, we can see the potential for Envoy to be extremely useful for managing service-to-service request paths. 
 
@@ -101,5 +128,9 @@ By enhancing the networking with features such as:
 - circuit breaking
 
 the services are able to concentrate on business logic and differentiating features rather than wasting time on tedious cross-cutting networking tasks.
+
+## Failing requests
+
+
 
 
