@@ -40,12 +40,11 @@ In this case, we will use the file configuration format. Here is an example of a
 
 ```plain
 clear
-cat ./labs/01/config/envoy_config.yaml
+cat ./labs/01/config/envoy_config_base.yaml
 ```{{exec}}
 
-
 ```plain
-kubectl create proxy-envoy envoy --from-file=envoy.yaml=./labs/01/config/envoy-config.yaml -o yaml --dry-run=client | kubectl apply -f -
+kubectl create cm envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_base.yaml -o yaml --dry-run=client | kubectl apply -f -
 kubectl apply -f ./labs/01/envoy-deploy.yaml
 ```{{exec}}
 
@@ -55,5 +54,52 @@ Let's now try calling the Envoy Proxy to verify that it routes correctly to the 
 kubectl exec deploy/sleep -- curl http://envoy/headers
 ```{{exec}}
 
+
+> We can observe a response with additional response headers, such as X-Envoy-Expected-Rq-Timeout-Ms, in the output.
+> ```plain
+> ...
+> "headers": {
+>     "Accept": "*/*", 
+>     "Host": "envoy", 
+>     "User-Agent": "curl/7.87.0-DEV", 
+>     "X-Envoy-Downstream-Service-Cluster": "", 
+>     "X-Envoy-Expected-Rq-Timeout-Ms": "15000", 
+>     "X-Envoy-Internal": "true"
+>   }
+> ```
+
+
+## Change config
+
+
+```bash
+kubectl create cm envoy --from-file=envoy.yaml=./labs/01/config/envoy-config-timeout.yaml -o yaml --dry-run=client | kubectl apply -f -
+kubectl rollout restart deploy/envoy
+```{{exec}}
+
+
+```bash
+kubectl exec deploy/sleep -- curl http://envoy/headers
+```
+
+```
+headers
+```
+
+
+```plain
+kubectl exec deploy/sleep -- curl -v http://envoy/delay/5
+```{{exec}}
+
+
+Although this has been straightforward so far, we can see the potential for Envoy to be extremely useful for managing service-to-service request paths. 
+
+By enhancing the networking with features such as:
+
+- timeouts
+- retries
+- circuit breaking
+
+the services are able to concentrate on business logic and differentiating features rather than wasting time on tedious cross-cutting networking tasks.
 
 
