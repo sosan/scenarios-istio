@@ -13,8 +13,7 @@
       },
       {
         "title": "Lab Envoy",
-        "text": "step3/text.md",
-        "verify": "verify.sh"
+        "text": "step3/text.md"
       }
     ],
     "finish": {
