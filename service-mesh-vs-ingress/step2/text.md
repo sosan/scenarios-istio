@@ -11,13 +11,20 @@ This allows it to:
 - apply any configured policies or rules before forwarding the traffic to its destination. 
 
 In addition to its role as a proxy, Envoy also provides features such as:
-- routing (supports multiple protocols and can be used in conjunction with other technologies such as gRPC and HTTP/2)
-- load balancing
-- observability
-- service discovery
-- security
 
-One of the main benefits of using Envoy is its ability to provide a single, consistent layer for all communication within a microservices architecture. This can simplify the architecture and make it easier to manage and scale the system. Envoy is also highly configurable and can be customized to fit the specific needs of a particular deployment.
+- **Routing**. Supports multiple protocols and can be used in conjunction with other technologies such as gRPC and HTTP/2
+
+- **Load balancing**
+
+- **Observability**. It is very difficult for architects to implement stats, logging, and tracing across different services and network infrastructures, such as load balancers. Without standardization, it becomes difficult to trace the root cause of a problem in a network by scanning the health of multiple services separately and identifying the point of failure.
+
+- **Service discovery**. Scaling application features becomes difficult as developers spend a lot of their time writing network or security logic. 
+
+- **Security**. It becomes challenging for the team to manage and maintain the network centrally and keep it safe and secure. Oftentimes, developers are frustrated because they have to spend time debugging the network or writing security policies instead of focusing on business logic.
+
+One of the main benefits of using Envoy is its ability to provide a single, consistent layer for all communication within a microservices architecture.
+
+This can simplify the architecture and make it easier to manage and scale the system. Envoy is also highly configurable and can be customized to fit the specific needs of a particular deployment.
 
 Envoy is designed to be resilient and performant, with a focus on high throughput and low latency. It is widely used in production environments and has been adopted by companies such as Lyft, Airbnb, and Square.
 
@@ -37,4 +44,4 @@ In this diagram, Envoy sits between the client and the service, proxying request
 
 The importance of Envoy to Istio cannot be overstated, which is why we start our labs with it.
 
-Let's GOO!
+Let's run some labs!. GOO!
