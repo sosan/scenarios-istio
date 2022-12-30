@@ -15,9 +15,6 @@ spec:
   - name: http
     port: 80
     targetPort: 15001
-  # - name: admin
-  #   port: 15000
-  #   targetPort: 15000
   selector:
     app: envoy
 ---

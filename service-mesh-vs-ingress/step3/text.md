@@ -2,7 +2,7 @@
 
 ## Prerequsites
 
-Confirm that you are in the correct directory for this lab: `/root`.
+Confirm that you are in the correct directory for this lab: `/root`
 
 ## Setup services
 
@@ -13,7 +13,7 @@ kubectl apply -f ./labs/01/httpbin.yaml
 kubectl apply -f ./labs/01/sleep.yaml
 ```{{exec}}
 
-Wait about 40 seconds until the pods are up.
+Wait about 50 seconds until the pods are up.
 
 ```bash
 kubectl get pods
@@ -39,8 +39,13 @@ Envoy can be configured fully by loading a YAML/JSON file or partially by using 
 In this case, we will use the file configuration format. Here is an example of a simple configuration file:
 
 ```plain
+clear
 cat ./labs/01/config/envoy_config.yaml
 ```{{exec}}
 
 
+```bash
+kubectl create proxy-envoy envoy --from-file=envoy.yaml=./labs/01/config/envoy-config.yaml -o yaml --dry-run=client | kubectl apply -f -
+kubectl apply -f ./labs/01/envoy-deploy.yaml
+```
 
