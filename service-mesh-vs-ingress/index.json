@@ -14,6 +14,10 @@
       {
         "title": "Lab Envoy",
         "text": "step3/text.md"
+      },
+      {
+        "title": "Lab Istio",
+        "text": "step4/text.md"
       }
     ],
     "finish": {
