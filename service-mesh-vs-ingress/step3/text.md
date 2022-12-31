@@ -62,7 +62,7 @@ cat ./labs/01/config/envoy_config_base.yaml ; echo
 ```{{exec}}
 
 ```plain
-kubectl create cm envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_base.yaml -o yaml --dry-run=client | kubectl apply -f -
+kubectl create configmap envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_base.yaml -o yaml --dry-run=client | kubectl apply -f -
 kubectl apply -f ./labs/01/envoy-deploy.yaml
 ```{{exec}}
 
@@ -111,7 +111,7 @@ route_config:
 
 
 ```plain
-kubectl create cm envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_timeout.yaml -o yaml --dry-run=client | kubectl apply -f -
+kubectl create configmap envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_timeout.yaml -o yaml --dry-run=client | kubectl apply -f -
 kubectl rollout restart deploy/envoy
 ```{{exec}}
 
@@ -176,7 +176,7 @@ route_config:
 ```
 
 ```plain
-kubectl create cm envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_retries.yaml -o yaml --dry-run=client | kubectl apply -f -
+kubectl create configmap envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_retries.yaml -o yaml --dry-run=client | kubectl apply -f -
 kubectl rollout restart deploy/envoy
 ```{{exec}}
 
