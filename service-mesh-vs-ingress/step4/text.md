@@ -65,4 +65,4 @@ After executing these commands, it is a good idea to verify the pods running in 
 kubectl -n istio-lab-01 get pods
 ```
 
-## Install sidecars
+## Inject sidecars
