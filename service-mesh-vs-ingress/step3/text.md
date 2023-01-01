@@ -12,27 +12,29 @@ pwd
 
 In this lab, we use a simple httpbin service and a sleep app to test the basic functionality of Envoy.
 
+We will start by creating a namespace for the Envoy lab:
+
 ```plain
-kubectl create namespace envoy_lab_01
+kubectl create namespace envoy-lab-01
 ```{{exec}}
 
-
+So we will continue by deploying two services: HTTPBin and sleeping service curl:
 
 ```plain
-kubectl apply -f ./labs/01/httpbin.yaml -n envoy_lab_01
-kubectl apply -f ./labs/01/sleep.yaml -n envoy_lab_01
+kubectl apply -f ./labs/01/httpbin.yaml -n envoy-lab-01
+kubectl apply -f ./labs/01/sleep.yaml -n envoy-lab-01
 ```{{exec}}
 
 Wait about 50 seconds until the pods are up.
 
 ```plain
-kubectl get pods -n envoy_lab_01
+kubectl get pods -n envoy-lab-01
 ```{{exec}}
 
 To confirm that everything has been installed correctly, let's try run:
 
 ```plain
-kubectl -n envoy_lab_01 exec deploy/sleep -- curl -s httpbin:8080/anything 
+kubectl -n envoy-lab-01 exec deploy/sleep -- curl -s httpbin:8080/anything 
 ```{{exec}}
 
 
@@ -68,8 +70,8 @@ cat ./labs/01/config/envoy_config_base.yaml ; echo
 ```{{exec}}
 
 ```plain
-kubectl create configmap envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_base.yaml -o yaml --dry-run=client | kubectl apply -f - -n envoy_lab_01
-kubectl apply -f ./labs/01/envoy-deploy.yaml -n envoy_lab_01
+kubectl create configmap envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_base.yaml -o yaml --dry-run=client | kubectl apply -f - -n envoy-lab-01
+kubectl apply -f ./labs/01/envoy-deploy.yaml -n envoy-lab-01
 chmod +x ./labs/01/wait-headers.sh
 ./labs/01/wait-headers.sh
 ```{{exec}}
@@ -77,7 +79,7 @@ chmod +x ./labs/01/wait-headers.sh
 So when we get again cursor focus (about 50 seconds), let's try calling the Envoy Proxy to verify that it routes correctly to the httpbin service.
 
 ```plain
-kubectl -n envoy_lab_01 exec deploy/sleep -- curl -s http://envoy/headers
+kubectl -n envoy-lab-01 exec deploy/sleep -- curl -s http://envoy/headers
 ```{{exec}}
 
 
@@ -119,14 +121,14 @@ route_config:
 
 
 ```plain
-kubectl create configmap envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_timeout.yaml -o yaml --dry-run=client | kubectl apply -f - -n envoy_lab_01
-kubectl rollout restart deploy/envoy -n envoy_lab_01
+kubectl create configmap envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_timeout.yaml -o yaml --dry-run=client | kubectl apply -f - -n envoy-lab-01
+kubectl rollout restart deploy/envoy -n envoy-lab-01
 ./labs/01/wait-headers.sh
 ```{{exec}}
 
 
 ```plain
-kubectl -n envoy_lab_01 exec deploy/sleep -- curl -s http://envoy/headers
+kubectl -n envoy-lab-01 exec deploy/sleep -- curl -s http://envoy/headers
 ```{{exec}}
 
 ```
@@ -144,7 +146,7 @@ kubectl -n envoy_lab_01 exec deploy/sleep -- curl -s http://envoy/headers
 > We observe *X-Envoy-Expected-Rq-Timeout-Ms* changed to *600*
 
 ```plain
-kubectl -n envoy_lab_01 exec deploy/sleep -- curl -s http://envoy/delay/100
+kubectl -n envoy-lab-01 exec deploy/sleep -- curl -s http://envoy/delay/100
 ```{{exec}}
 
 > Response similar to:
@@ -185,12 +187,12 @@ route_config:
 ```
 
 ```plain
-kubectl create configmap envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_retries.yaml -o yaml --dry-run=client | kubectl apply -f - -n envoy_lab_01
-kubectl rollout restart deploy/envoy -n envoy_lab_01
+kubectl create configmap envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_retries.yaml -o yaml --dry-run=client | kubectl apply -f - -n envoy-lab-01
+kubectl rollout restart deploy/envoy -n envoy-lab-01
 ```{{exec}}
 
 ```plain
-kubectl -n envoy_lab_01 exec deploy/sleep -- curl -s http://envoy/status/500
+kubectl -n envoy-lab-01 exec deploy/sleep -- curl -s http://envoy/status/500
 ```{{exec}}
 
 ## Traffic routing
