@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: greetings
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: greetings
+  labels:
+    app: greetings
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: greetings
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: greetings
+        version: v1
+      annotations:
+    spec:
+      serviceAccountName: greetings    
+      containers:
+      - name: greetings
+        image: nicholasjackson/fake-service:v0.24.2@sha256:85f4ea8015a9ece18f5dbec7f68cb3480e22d8e772fbf2ca823559defcae1013
+        ports:
+        - containerPort: 8080
+        env:
+        - name: "LISTEN_ADDR"
+          value: "0.0.0.0:8080"
+        - name: "UPSTREAM_URIS"
+          value: "http://order:8080"
+        - name: "NAME"
+          value: "greetings"
+        - name: "MESSAGE"
+          value: "---> Greetings!"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: greetings
+spec:
+  selector:
+    app: greetings
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
