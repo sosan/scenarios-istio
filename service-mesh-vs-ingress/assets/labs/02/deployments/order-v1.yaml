@@ -20,12 +20,23 @@ spec:
       labels:
         app: order
         version: v1
-      annotations:
     spec:
       serviceAccountName: order    
       containers:
       - name: order
-        image: nicholasjackson/fake-service:v0.24.2@sha256:85f4ea8015a9ece18f5dbec7f68cb3480e22d8e772fbf2ca823559defcae1013
+        image: nicholasjackson/fake-service:v0.24.2
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        securityContext:
+          runAsUser: 1001
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
         ports:
         - containerPort: 8080
         env:

@@ -43,6 +43,18 @@ spec:
           - "--config-path /etc/envoy/envoy.yaml"
         ports:
         - containerPort: 15001
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        securityContext:
+          runAsUser: 1001
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
         volumeMounts:
           - name: envoy
             mountPath: /etc/envoy
