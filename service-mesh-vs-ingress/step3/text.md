@@ -71,11 +71,10 @@ cat ./labs/01/config/envoy_config_base.yaml ; echo
 
 ```plain
 kubectl -n envoy-lab-01 create configmap envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_base.yaml -o yaml --dry-run=client | kubectl -n envoy-lab-01 apply -f -
-kubectl apply -f ./labs/01/envoy-deploy.yaml -n envoy-lab-01
+kubectl -n envoy-lab-01 apply -f ./labs/01/envoy-deploy.yaml
 chmod +x ./labs/01/wait-headers.sh
-```{{exec}}
-
 ./labs/01/wait-headers.sh
+```{{exec}}
 
 Once we have regained cursor focus (after approximately 50 seconds), let's try calling the Envoy proxy to ensure that it correctly routes to the HTTPBin service.
 
@@ -147,11 +146,10 @@ kubectl -n envoy-lab-01 exec deploy/sleep -- curl -s http://envoy/headers
 > We observe *X-Envoy-Expected-Rq-Timeout-Ms* changed to *600*
 
 ```plain
-kubectl -n envoy-lab-01 exec deploy/sleep -- curl -s http://envoy/delay/100
+kubectl -n envoy-lab-01 exec deploy/sleep -- curl -s http://envoy/delay/100 ; echo
 ```{{exec}}
 
-> Response similar to:
-> upstream request timeout
+> Response similar to: *upstream request timeout*
 
 Although this has been straightforward so far, we can see the potential for Envoy to be extremely useful for managing service-to-service request paths. 
 
@@ -165,7 +163,11 @@ the services are able to concentrate on business logic and differentiating featu
 
 ## Config retries
 
-Utilizing network services can be intimidating due to the potential for response failure or technical issues. To mitigate this risk, we can configure Envoy to automatically attempt to reestablish a connection in the event of a request failure. It's important to note that this is not always a suitable solution, but Envoy can be adjusted to make more informed decisions about when to retry
+Utilizing network services can be intimidating due to the potential for response failure or technical issues. 
+
+To mitigate this risk, we can configure Envoy to automatically attempt to reestablish a connection in the event of a request failure. 
+
+It's important to note that this is not always a suitable solution, but Envoy can be adjusted to make more informed decisions about when to retry.
 
 Config example 5XX retries:
 
@@ -187,8 +189,10 @@ route_config:
           num_retries: 10 # <<<<
 ```
 
+We apply the new configuration and restart deployment:
+
 ```plain
-kubectl create configmap envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_retries.yaml -o yaml --dry-run=client | kubectl apply -f - -n envoy-lab-01
+kubectl -n envoy-lab-01 create configmap envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_retries.yaml -o yaml --dry-run=client | kubectl apply -f - -n envoy-lab-01
 kubectl rollout restart deploy/envoy -n envoy-lab-01
 ```{{exec}}
 
@@ -211,5 +215,7 @@ kubectl -n envoy-lab-01 exec deploy/sleep -- curl -s http://envoy/status/500
 
 ## Next Lab play with Istio
 
-In this session, we will delve deeper into the inner workings of Istio's control plane. We will also examine how we can utilize the various capabilities of Envoy, including resilience, routing, observability, and security, to build a secure and observable microservices architecture."
+In the next lab, we will delve deeper into the inner workings of Istio's control plane. 
+
+We will also examine how we can utilize the various capabilities of Envoy, including resilience, routing, observability, and security, to build a secure and observable microservices architecture.
 
