@@ -64,10 +64,11 @@ cat ./labs/01/config/envoy_config_base.yaml ; echo
 ```plain
 kubectl create configmap envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_base.yaml -o yaml --dry-run=client | kubectl apply -f -
 kubectl apply -f ./labs/01/envoy-deploy.yaml
+chmod +x ./labs/01/wait-headers.sh
 ./labs/01/wait-headers.sh
 ```{{exec}}
 
-So when we get again cursor focus, let's try calling the Envoy Proxy to verify that it routes correctly to the httpbin service.
+So when we get again cursor focus (about 50 seconds), let's try calling the Envoy Proxy to verify that it routes correctly to the httpbin service.
 
 ```plain
 kubectl exec deploy/sleep -- curl -s http://envoy/headers
