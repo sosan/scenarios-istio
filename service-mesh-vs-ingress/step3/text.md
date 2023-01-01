@@ -26,7 +26,7 @@ kubectl get pods
 To confirm that everything has been installed correctly, let's try run:
 
 ```plain
-kubectl exec deploy/sleep -- curl httpbin:8080/anything
+kubectl exec deploy/sleep -- curl -s httpbin:8080/anything
 ```{{exec}}
 
 
@@ -64,12 +64,13 @@ cat ./labs/01/config/envoy_config_base.yaml ; echo
 ```plain
 kubectl create configmap envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_base.yaml -o yaml --dry-run=client | kubectl apply -f -
 kubectl apply -f ./labs/01/envoy-deploy.yaml
+./labs/01/wait-headers.sh
 ```{{exec}}
 
-Wait some seconds and let's try calling the Envoy Proxy to verify that it routes correctly to the httpbin service.
+So when we get again cursor focus, let's try calling the Envoy Proxy to verify that it routes correctly to the httpbin service.
 
 ```plain
-kubectl exec deploy/sleep -- curl http://envoy/headers ; echo
+kubectl exec deploy/sleep -- curl -s http://envoy/headers
 ```{{exec}}
 
 
@@ -113,11 +114,12 @@ route_config:
 ```plain
 kubectl create configmap envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_timeout.yaml -o yaml --dry-run=client | kubectl apply -f -
 kubectl rollout restart deploy/envoy
+./labs/01/wait-headers.sh
 ```{{exec}}
 
 
 ```plain
-kubectl exec deploy/sleep -- curl http://envoy/headers ; echo
+kubectl exec deploy/sleep -- curl -s http://envoy/headers
 ```{{exec}}
 
 ```
@@ -135,7 +137,7 @@ kubectl exec deploy/sleep -- curl http://envoy/headers ; echo
 > We observe *X-Envoy-Expected-Rq-Timeout-Ms* changed to *600*
 
 ```plain
-kubectl exec deploy/sleep -- curl http://envoy/delay/100 ; echo
+kubectl exec deploy/sleep -- curl -s http://envoy/delay/100
 ```{{exec}}
 
 > Response similar to:
@@ -181,7 +183,7 @@ kubectl rollout restart deploy/envoy
 ```{{exec}}
 
 ```plain
-kubectl exec deploy/sleep -- curl http://envoy/status/500 ; echo
+kubectl exec deploy/sleep -- curl -s http://envoy/status/500
 ```{{exec}}
 
 ## Traffic routing
