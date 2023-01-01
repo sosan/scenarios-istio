@@ -34,7 +34,7 @@ spec:
     spec:
       serviceAccountName: envoyproxy      
       containers:
-      - image: docker.io/envoyproxy/envoy:v1.24.1
+      - image: docker.io/envoyproxy/envoy:v1.24.1@sha256:46ca1ee2d0e3c45c1891b3e0508146e67a6fbdeea0e44b79d3e4b5c80287719a
         imagePullPolicy: IfNotPresent
         name: envoy
         command: 
