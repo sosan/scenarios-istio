@@ -213,6 +213,12 @@ kubectl -n envoy-lab-01 exec deploy/sleep -- curl -s http://envoy/status/500
 (Soon)
 
 
+## Delete namespace
+
+```plain
+kubectl delete namespaces envoy-lab-01
+```{{exec}}
+
 ## Next Lab play with Istio
 
 In the next lab, we will delve deeper into the inner workings of Istio's control plane. 
