@@ -54,7 +54,7 @@ spec:
       serviceAccountName: sleep
       containers:
       - name: sleep
-        image: curlimages/curl:latest@sha256:904f15d15a2551bcee907137d23fc60debfaf8a8efd7efd286eca85a57d627b5
+        image: curlimages/curl
         command: ["/bin/sleep", "infinity"]
         imagePullPolicy: IfNotPresent
         volumeMounts:
