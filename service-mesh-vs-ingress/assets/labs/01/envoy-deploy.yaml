@@ -45,11 +45,11 @@ spec:
           requests:
             memory: "64Mi"
             cpu: "500m"
-            ephemeral-storage: "10Mi"
+            ephemeral-storage: "0Mi"
           limits:
             memory: "128Mi"
             cpu: "550m"
-            ephemeral-storage: "10Mi"
+            ephemeral-storage: "0Mi"
         securityContext:
           allowPrivilegeEscalation: false
           # runAsUser: 10001
