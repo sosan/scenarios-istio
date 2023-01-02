@@ -52,14 +52,14 @@ kubectl create namespace istio-lab-01
 
 
 ```plain
-kubectl apply -n istio-lab-01 -f labs/02/deployments/backend-api.yaml
-kubectl apply -n istio-lab-01 -f labs/02/deployments/greetings.yaml
-kubectl apply -n istio-lab-01 -f labs/02/deployments/order-v1.yaml
-kubectl apply -n istio-lab-01 -f labs/02/deployments/sleep.yaml
+kubectl apply -n istio-lab-01 -f ./labs/02/deployments/backend-api.yaml
+kubectl apply -n istio-lab-01 -f ./labs/02/deployments/greetings.yaml
+kubectl apply -n istio-lab-01 -f ./labs/02/deployments/order-v1.yaml
+kubectl apply -n istio-lab-01 -f ./labs/02/deployments/sleep.yaml
 ```{{exec}}
 
 
-After executing these commands, it is a good idea to verify the pods running in the istioinaction namespace:
+After executing these commands, it is a good idea to verify the pods running in the `istio-lab-01` namespace:
 
 ```plain
 kubectl -n istio-lab-01 get pods
