@@ -100,7 +100,7 @@ kubectl -n envoy-lab-01 exec deploy/sleep -- curl -s http://envoy/headers
 > ```
 
 
-## Change config
+## Envoy Change config
 
 We will change envoy config to define a route that directs traffic to the httpbin_service cluster. The route applies to all domains and matches all incoming requests with a prefix of `/`.
 
