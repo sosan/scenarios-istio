@@ -39,15 +39,15 @@ spec:
       - image: docker.io/kong/httpbin:0.1.0@sha256:9d65a5b1955d2466762f53ea50eebae76be9dc7e277217cd8fb9a24b004154f4
         name: httpbin
         imagePullPolicy: Always
-        # readinessProbe:
-        #   httpGet:
-        #     path: /health
-        #     port: 8080
-        #   initialDelaySeconds: 5
-        #   periodSeconds: 5
-        #   timeoutSeconds: 1
-        #   successThreshold: 1
-        #   failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /status/200
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
         resources:
           requests:
             memory: "128Mi"
