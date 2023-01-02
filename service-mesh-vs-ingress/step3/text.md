@@ -39,24 +39,23 @@ kubectl -n envoy-lab-01 exec deploy/sleep -- curl -s httpbin:8080/anything
 
 
 > We should see httpbin output that looks similar to the following:
-
-```plain
-{
-  "args": {}, 
-  "data": "", 
-  "files": {}, 
-  "form": {}, 
-  "headers": {
-    "Accept": "*/*", 
-    "Host": "httpbin:8080", 
-    "User-Agent": "curl/7.87.0-DEV"
-  }, 
-  "json": null, 
-  "method": "GET", 
-  "origin": "192.168.1.7", 
-  "url": "http://httpbin:8080/anything"
-}
-```
+> ```plain
+> {
+>   "args": {}, 
+>   "data": "", 
+>   "files": {}, 
+>   "form": {}, 
+>   "headers": {
+>     "Accept": "*/*", 
+>     "Host": "httpbin:8080", 
+>     "User-Agent": "curl/7.87.0-DEV"
+>   }, 
+>   "json": null, 
+>   "method": "GET", 
+>   "origin": "192.168.1.7", 
+>   "url": "http://httpbin:8080/anything"
+> }
+> ```
 
 ## Envoy config
 
