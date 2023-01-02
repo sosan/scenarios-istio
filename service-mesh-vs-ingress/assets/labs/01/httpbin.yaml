@@ -43,11 +43,6 @@ spec:
           httpGet:
             path: /status/200
             port: 80
-          initialDelaySeconds: 5
-          periodSeconds: 5
-          timeoutSeconds: 5
-          successThreshold: 1
-          failureThreshold: 3
         resources:
           requests:
             memory: "60Mi"
@@ -57,11 +52,11 @@ spec:
             memory: "100Mi"
             cpu: "500m"
             ephemeral-storage: "0Mi"
-        # securityContext:
-        #   runAsUser: 10001
-        #   runAsGroup: 10002
-        #   runAsNonRoot: true
-        #   allowPrivilegeEscalation: false
-        #   readOnlyRootFilesystem: true
+        securityContext:
+          allowPrivilegeEscalation: false
+          # runAsUser: 10001
+          # runAsGroup: 10001
+          # runAsNonRoot: true
+          # readOnlyRootFilesystem: true
         ports:
         - containerPort: 80
