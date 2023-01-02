@@ -68,6 +68,8 @@ clear
 cat ./labs/01/config/envoy_config_base.yaml ; echo
 ```{{exec}}
 
+We will create a ConfigMap named `envoy` using the data in the `envoy_config_base.yaml` file and also we will apply the configuration from the previous command
+
 ```plain
 kubectl -n envoy-lab-01 create configmap envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_base.yaml -o yaml --dry-run=client | kubectl -n envoy-lab-01 apply -f -
 kubectl -n envoy-lab-01 apply -f ./labs/01/envoy-deploy.yaml
