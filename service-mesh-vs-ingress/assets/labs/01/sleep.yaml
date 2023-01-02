@@ -59,13 +59,13 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: "60Mi"
-            cpu: "250m"
-            ephemeral-storage: "0Mi"
-          limits:
-            memory: "100Mi"
+            memory: "64Mi"
             cpu: "500m"
-            ephemeral-storage: "0Mi"
+            ephemeral-storage: "10Mi"
+          limits:
+            memory: "128Mi"
+            cpu: "550m"
+            ephemeral-storage: "10Mi"
         securityContext:
           allowPrivilegeEscalation: false
           # runAsUser: 10001
