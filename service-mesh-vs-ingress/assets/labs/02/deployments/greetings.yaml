@@ -34,11 +34,11 @@ spec:
           requests:
             memory: "60Mi"
             cpu: "250m"
-            ephemeral-storage: "0Mi"
+            # ephemeral-storage: 0 # lab cannot
           limits:
             memory: "100Mi"
             cpu: "500m"
-            ephemeral-storage: "0Mi"
+            # ephemeral-storage: 0 # lab cannot
         securityContext:
           allowPrivilegeEscalation: false
           # runAsUser: 10001
