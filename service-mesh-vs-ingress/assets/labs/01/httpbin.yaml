@@ -37,17 +37,29 @@ spec:
       serviceAccountName: httpbin
       containers:
       - image: docker.io/kong/httpbin:0.1.0@sha256:9d65a5b1955d2466762f53ea50eebae76be9dc7e277217cd8fb9a24b004154f4
-        imagePullPolicy: IfNotPresent
         name: httpbin
+        imagePullPolicy: Always
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
         resources:
           requests:
             memory: "64Mi"
             cpu: "250m"
+            ephemeral-storage: "10Mi"
           limits:
             memory: "128Mi"
             cpu: "500m"
+            ephemeral-storage: "128Mi"
         securityContext:
-          runAsUser: 1001
+          runAsUser: 10001
+          runAsGroup: 10002
           runAsNonRoot: true
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: true

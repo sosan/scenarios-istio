@@ -35,26 +35,38 @@ spec:
       serviceAccountName: envoyproxy      
       containers:
       - image: docker.io/envoyproxy/envoy:v1.24-latest@sha256:1f07971d83e470d6f87583044ddb2b7aefac9ba1f14239479ea936599166f638
-        imagePullPolicy: IfNotPresent
         name: envoy
+        imagePullPolicy: Always
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+            ephemeral-storage: "10Mi"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+            ephemeral-storage: "128Mi"
+        securityContext:
+          runAsUser: 10001
+          runAsGroup: 10002
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
         command: 
           - "/usr/local/bin/envoy"
         args:
           - "--config-path /etc/envoy/envoy.yaml"
         ports:
         - containerPort: 15001
-        resources:
-          requests:
-            memory: "64Mi"
-            cpu: "250m"
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
-        securityContext:
-          runAsUser: 1001
-          runAsNonRoot: true
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
         volumeMounts:
           - name: envoy
             mountPath: /etc/envoy
