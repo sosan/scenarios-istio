@@ -102,6 +102,11 @@ kubectl -n envoy-lab-01 exec deploy/sleep -- curl -s http://envoy/headers
 
 ## Change config
 
+We will change envoy config to define a route that directs traffic to the httpbin_service cluster. The route applies to all domains and matches all incoming requests with a prefix of `/`.
+
+The route has a timeout of 0.6 seconds, which means that if a response is not received from the httpbin_service cluster within that time, the request will be considered failed and the route will not be used. 
+
+This timeout can be used to ensure that requests are not stuck waiting for a response from the cluster for an excessive amount of time, which can help to improve the performance and reliability of the overall system.
 
 ```plain
 route_config:
@@ -118,6 +123,7 @@ route_config:
         timeout: 0.6s # <<<<<<<<<<
 ```
 
+Update the configuration of deployment `envoy` in the `envoy-lab-01` namespace and restart deployment:
 
 ```plain
 kubectl create configmap envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_timeout.yaml -o yaml --dry-run=client | kubectl apply -f - -n envoy-lab-01
@@ -125,30 +131,31 @@ kubectl rollout restart deploy/envoy -n envoy-lab-01
 ./labs/01/wait-headers.sh
 ```{{exec}}
 
+This curl command is utilized to transmit an HTTP request to envoy, that directs traffic towards the Envoy containers within the cluster.
+
+The `http://envoy/headers` URL is used to request the `/headers` endpoint on the envoy service.
 
 ```plain
 kubectl -n envoy-lab-01 exec deploy/sleep -- curl -s http://envoy/headers
 ```{{exec}}
 
-```
-...
-"headers": {
-    "Accept": "*/*", 
-    "Host": "envoy", 
-    "User-Agent": "curl/7.87.0-DEV", 
-    "X-Envoy-Downstream-Service-Cluster": "", 
-    "X-Envoy-Expected-Rq-Timeout-Ms": "600", 
-    "X-Envoy-Internal": "true"
-  }
-```
-
 > We observe *X-Envoy-Expected-Rq-Timeout-Ms* changed to *600*
+> ```plain
+> "headers": {
+>     "Accept": "*/*", 
+>     "Host": "envoy", 
+>     "User-Agent": "curl/7.87.0-DEV", 
+>     "X-Envoy-Downstream-Service-Cluster": "", 
+>     "X-Envoy-Expected-Rq-Timeout-Ms": "600", 
+>     "X-Envoy-Internal": "true"
+>   }
+> ```
 
 ```plain
 kubectl -n envoy-lab-01 exec deploy/sleep -- curl -s http://envoy/delay/100 ; echo
 ```{{exec}}
 
-> Response similar to: *upstream request timeout*
+> Response similar: *upstream request timeout*
 
 Although this has been straightforward so far, we can see the potential for Envoy to be extremely useful for managing service-to-service request paths. 
 
