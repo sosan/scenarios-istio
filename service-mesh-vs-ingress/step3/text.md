@@ -132,10 +132,8 @@ Update the configuration of deployment `envoy` in the `envoy-lab-01` namespace a
 
 ```plain
 kubectl create configmap envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_timeout.yaml -o yaml --dry-run=client | kubectl apply -f - -n envoy-lab-01
-sleep 1
 kubectl rollout restart deploy/envoy -n envoy-lab-01
-sleep 5
-./labs/01/wait-headers.sh
+sleep 15
 ```{{exec}}
 
 This curl command to `http://envoy/headers` URL is utilized to transmit an HTTP request to HTTPBin service throught Envoy:
@@ -144,7 +142,7 @@ This curl command to `http://envoy/headers` URL is utilized to transmit an HTTP 
 kubectl -n envoy-lab-01 exec deploy/sleep -- curl -s http://envoy/headers
 ```{{exec}}
 
-> We observe *X-Envoy-Expected-Rq-Timeout-Ms* changed to *600*
+> We observe *X-Envoy-Expected-Rq-Timeout-Ms* changed to *600* (It may take a few seconds for the timeout value to be updated.)
 > ```plain
 > "headers": {
 >     "Accept": "*/*", 
@@ -155,6 +153,7 @@ kubectl -n envoy-lab-01 exec deploy/sleep -- curl -s http://envoy/headers
 >     "X-Envoy-Internal": "true"
 >   }
 > ```
+
 
 We will send this curl command that sends an HTTP request to the URL http://envoy/delay/2000, which is expected to take 2000 seconds to complete.
 
