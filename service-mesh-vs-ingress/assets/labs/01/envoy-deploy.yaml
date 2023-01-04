@@ -44,11 +44,11 @@ spec:
         resources:
           requests:
             memory: "64Mi"
-            cpu: "500m"
+            cpu: "1000m"
             # ephemeral-storage: "0Mi" # lab cannot
           limits:
             memory: "128Mi"
-            cpu: "550m"
+            cpu: "1550m"
             # ephemeral-storage: "0Mi" # lab cannot
         securityContext:
           allowPrivilegeEscalation: false
