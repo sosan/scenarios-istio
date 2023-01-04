@@ -101,6 +101,9 @@ kubectl -n envoy-lab-01 exec deploy/sleep -- curl -s http://envoy/headers
 >   }
 > ```
 
+Here is diagram interactions:
+
+![Diagram kubectl-sleep-envoy](https://raw.githubusercontent.com/sosan/scenarios-istio/main/service-mesh-vs-ingress/assets/images/sleep_envoy_httpbin.svg)
 
 ## Envoy Change config
 
@@ -133,9 +136,7 @@ kubectl rollout restart deploy/envoy -n envoy-lab-01
 ./labs/01/wait-headers.sh
 ```{{exec}}
 
-This curl command is utilized to transmit an HTTP request to envoy, that directs traffic towards the Envoy containers within the cluster.
-
-The `http://envoy/headers` URL is used to request the `/headers` endpoint on the envoy service.
+This curl command to `http://envoy/headers` URL is utilized to transmit an HTTP request to HTTPBin service throught Envoy:
 
 ```plain
 kubectl -n envoy-lab-01 exec deploy/sleep -- curl -s http://envoy/headers
@@ -153,11 +154,17 @@ kubectl -n envoy-lab-01 exec deploy/sleep -- curl -s http://envoy/headers
 >   }
 > ```
 
+We will send this curl command that sends an HTTP request to the URL http://envoy/delay/2000, which is expected to take 2000 seconds to complete.
+
 ```plain
-kubectl -n envoy-lab-01 exec deploy/sleep -- curl -s http://envoy/delay/100 ; echo
+kubectl -n envoy-lab-01 exec deploy/sleep -- curl -s http://envoy/delay/2000 ; echo
 ```{{exec}}
 
 > Response similar: *upstream request timeout*
+
+Diagram illustrating what occurred:
+
+![Diagram kubectl-sleep-envoy with timeout](https://raw.githubusercontent.com/sosan/scenarios-istio/main/service-mesh-vs-ingress/assets/images/sleep_envoy_httpbin_with_timeout.svg)
 
 Although this has been straightforward so far, we can see the potential for Envoy to be extremely useful for managing service-to-service request paths. 
 
