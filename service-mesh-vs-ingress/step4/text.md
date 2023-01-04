@@ -70,8 +70,29 @@ kubectl -n istio-lab-01 get pods
 
 We will install a sidecar onto `httpbin` service from the previous lab and explore it. We will manually inject the sidecar so that we can experiment with the security permissions in the bonus section, as the Istio sidecar has disabled privileges by default.
 
-To add the Istio sidecar to the httpbin service in the default namespace, run the following command:
+In the current istio configuration, `meshConfigMapName` we will get from:
 
 ```plain
-istioctl kube-inject -f ./labs/02/httpbin.yaml --meshConfigMapName istio-1-16-1 --injectConfigMapName istio-sidecar-injector-1-16-1  | kubectl apply -f -
+kubectl -n istio-system get configmap
 ```{{exec}}
+
+
+> We will get something similar to this, and will select `istio` as `configmapname` and `istio-sidecar-injector` as `injectConfigMapName`
+> ```plain
+> NAME                                  DATA   AGE
+> istio                                 2      26m
+> istio-ca-root-cert                    1      26m
+> istio-gateway-deployment-leader       0      26m
+> istio-gateway-status-leader           0      26m
+> istio-leader                          0      26m
+> istio-namespace-controller-election   0      26m
+> istio-sidecar-injector                2      26m
+> kube-root-ca.crt                      1      27m
+> ```
+
+To add the Istio sidecar to the `httpbin` service in the namespace `istio-lab-01`, run the following command:
+
+```plain
+istioctl kube-inject -f ./labs/02/httpbin.yaml --meshConfigMapName istio --injectConfigMapName istio-sidecar-injector  | kubectl -n istio-lab-01 apply -f -
+```{{exec}}
+
