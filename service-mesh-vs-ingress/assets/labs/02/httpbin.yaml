@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: httpbin
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpbin
+  labels:
+    app: httpbin
+    service: httpbin
+spec:
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 80
+  selector:
+    app: httpbin
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpbin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: httpbin
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: httpbin
+        version: v1
+    spec:
+      serviceAccountName: httpbin
+      containers:
+      - image: docker.io/kong/httpbin:0.1.0@sha256:9d65a5b1955d2466762f53ea50eebae76be9dc7e277217cd8fb9a24b004154f4
+        name: httpbin
+        imagePullPolicy: Always
+        # readinessProbe:
+        #   httpGet:
+        #     path: /status/200
+        #     port: 80
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "500m"
+            # ephemeral-storage: "0Mi" # lab cannot
+          limits:
+            memory: "128Mi"
+            cpu: "550m"
+            # ephemeral-storage: "0Mi" # lab cannot
+        securityContext:
+          allowPrivilegeEscalation: false
+          # runAsUser: 10001
+          # runAsGroup: 10001
+          # runAsNonRoot: true
+          # readOnlyRootFilesystem: true
+        ports:
+        - containerPort: 80
