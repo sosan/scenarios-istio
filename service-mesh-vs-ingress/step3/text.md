@@ -109,7 +109,7 @@ Here is diagram interactions:
 
 We will change envoy config to define a route that directs traffic to the httpbin_service cluster. The route applies to all domains and matches all incoming requests with a prefix of `/`.
 
-The route has a timeout of 0.6 seconds, which means that if a response is not received from the httpbin_service cluster within that time, the request will be considered failed and the route will not be used. 
+The route `/` has a timeout of 0.6 seconds, which means that if a response is not received from the `httpbin_service` cluster within that time, the request will be considered failed and the route will not be used. 
 
 This timeout can be used to ensure that requests are not stuck waiting for a response from the cluster for an excessive amount of time, which can help to improve the performance and reliability of the overall system.
 
@@ -132,7 +132,9 @@ Update the configuration of deployment `envoy` in the `envoy-lab-01` namespace a
 
 ```plain
 kubectl create configmap envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_timeout.yaml -o yaml --dry-run=client | kubectl apply -f - -n envoy-lab-01
+sleep 1
 kubectl rollout restart deploy/envoy -n envoy-lab-01
+sleep 5
 ./labs/01/wait-headers.sh
 ```{{exec}}
 
@@ -228,7 +230,9 @@ kubectl -n envoy-lab-01 exec deploy/sleep -- curl -s http://envoy/status/500
 (Soon)
 
 
-## Delete namespace
+## Final: Delete namespace
+
+The envoy-lab-01 namespace is no longer needed, so in order to release the resources it was using, we will delete the namespace using the following command:
 
 ```plain
 kubectl delete namespaces envoy-lab-01
