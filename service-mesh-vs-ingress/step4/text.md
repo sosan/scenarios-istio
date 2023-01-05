@@ -46,31 +46,15 @@ kubectl exec -n istio-system deploy/istiod -- pilot-discovery request GET /metri
 
 Istio injection sidecar can be set manually or automagically trought specific namespace, every app deployed to that namespace will get injected with envoy proxy automatically.
 
+## Inject sidecars manually
+
 We will begin by creating the namespace WITHOUT `istio-injection` enabled.
 
 ```plain
 kubectl create namespace istio-lab-01
 ```{{exec}}
 
-Let's run some mock `nicholasjackson/fake-service` apps:
-
-```plain
-kubectl apply -n istio-lab-01 -f ./labs/mock-apps/backend-api.yaml
-kubectl apply -n istio-lab-01 -f ./labs/mock-apps/greetings.yaml
-kubectl apply -n istio-lab-01 -f ./labs/mock-apps/order-v1.yaml
-kubectl apply -n istio-lab-01 -f ./labs/mock-apps/sleep.yaml
-NAMESPACE=istio-lab-01 URI=http://order:8080/health ./labs/02/wait.sh
-```{{exec}}
-
-After executing these commands, it is a good idea to verify the pods running in the `istio-lab-01` namespace:
-
-```plain
-kubectl -n istio-lab-01 get pods
-```{{exec}}
-
-## Inject sidecars manually
-
-We will install a sidecar onto `httpbin` service from the previous lab and explore it. We will manually inject the sidecar so that we can experiment with the security permissions in the bonus section, as the Istio sidecar has disabled privileges by default.
+Next, we will install a sidecar onto `httpbin` service from the previous lab and explore it. We will manually inject the sidecar so that we can experiment with the security permissions in the bonus section, as the Istio sidecar has disabled privileges by default.
 
 In the current istio configuration, `meshConfigMapName` we will get from:
 
@@ -83,14 +67,14 @@ kubectl -n istio-system get configmap
 > - `istio-sidecar-injector` as `injectConfigMapName`
 > ```plain
 > NAME                                  DATA   AGE
-> istio                                 2      26m
-> istio-ca-root-cert                    1      26m
-> istio-gateway-deployment-leader       0      26m
-> istio-gateway-status-leader           0      26m
-> istio-leader                          0      26m
-> istio-namespace-controller-election   0      26m
-> istio-sidecar-injector                2      26m
-> kube-root-ca.crt                      1      27m
+> istio                                 2      10m
+> istio-ca-root-cert                    1      10m
+> istio-gateway-deployment-leader       0      10m
+> istio-gateway-status-leader           0      10m
+> istio-leader                          0      10m
+> istio-namespace-controller-election   0      10m
+> istio-sidecar-injector                2      10m
+> kube-root-ca.crt                      1      11m
 > ```
 
 To add the Istio sidecar to the `httpbin` service in the namespace `istio-lab-01`, run the following command:
@@ -99,14 +83,22 @@ To add the Istio sidecar to the `httpbin` service in the namespace `istio-lab-01
 istioctl kube-inject -f ./labs/02/httpbin.yaml --meshConfigMapName istio --injectConfigMapName istio-sidecar-injector  | kubectl -n istio-lab-01 apply -f -
 ```{{exec}}
 
+
+
+After executing these commands, it is a good idea to verify the pods running in the `istio-lab-01` namespace:
+
 ```plain
 kubectl -n istio-lab-01 get pods
 ```{{exec}}
 
 > We will get something similar to:
 > ```plain
-
+> NAME                       READY   STATUS    RESTARTS   AGE
+> httpbin-7dc7cf6dd6-qljds   2/2     Running   0          12s
 > ```
+
+To quick verify that the Envoy proxy has been injected, the `READY` status should show 2/2.
+
 
 ## Inject sidecars automatically
 
