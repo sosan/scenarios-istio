@@ -44,7 +44,9 @@ Metrics:
 kubectl exec -n istio-system deploy/istiod -- pilot-discovery request GET /metrics
 ```{{exec}}
 
-We will begin by creating the namespace without `istio-injection` enabled
+Istio injection sidecar can be set manually or automagically trought specific namespace
+
+We will begin by creating the namespace WITHOUT `istio-injection` enabled.
 
 ```plain
 kubectl create namespace istio-lab-01
@@ -53,10 +55,10 @@ kubectl create namespace istio-lab-01
 Let's run some mock `nicholasjackson/fake-service` apps:
 
 ```plain
-kubectl apply -n istio-lab-01 -f ./mock-apps/backend-api.yaml
-kubectl apply -n istio-lab-01 -f ./mock-apps/greetings.yaml
-kubectl apply -n istio-lab-01 -f ./mock-apps/order-v1.yaml
-kubectl apply -n istio-lab-01 -f ./mock-apps/sleep.yaml
+kubectl apply -n istio-lab-01 -f ./labs/mock-apps/backend-api.yaml
+kubectl apply -n istio-lab-01 -f ./labs/mock-apps/greetings.yaml
+kubectl apply -n istio-lab-01 -f ./labs/mock-apps/order-v1.yaml
+kubectl apply -n istio-lab-01 -f ./labs/mock-apps/sleep.yaml
 NAMESPACE=istio-lab-01 URI=http://order:8080/health ./labs/02/wait.sh
 ```{{exec}}
 
@@ -66,7 +68,7 @@ After executing these commands, it is a good idea to verify the pods running in 
 kubectl -n istio-lab-01 get pods
 ```{{exec}}
 
-## Inject sidecars
+## Inject sidecars manually
 
 We will install a sidecar onto `httpbin` service from the previous lab and explore it. We will manually inject the sidecar so that we can experiment with the security permissions in the bonus section, as the Istio sidecar has disabled privileges by default.
 
