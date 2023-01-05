@@ -1,4 +1,4 @@
-## Sidecar proxy: Envoy
+## Sidecar proxy: Envoy Proxy
 
 We delve into one of the foundational components of Istio: the "data plane".
 
@@ -23,6 +23,13 @@ In addition to its role as a proxy, Envoy also provides features such as:
 - **Security**. It becomes challenging for the team to manage and maintain the network centrally and keep it safe and secure. Oftentimes, developers are frustrated because they have to spend time debugging the network or writing security policies instead of focusing on business logic.
 
 One of the main benefits of using Envoy is its ability to provide a single, consistent layer for all communication within a microservices architecture.
+
+Fat Microservice:
+![Fat Microservice](https://raw.githubusercontent.com/sosan/scenarios-istio/main/service-mesh-vs-ingress/assets/images/fat_microservices.svg)
+
+Microservice with service mesh:
+![Microservice with service mesh](https://raw.githubusercontent.com/sosan/scenarios-istio/main/service-mesh-vs-ingress/assets/images/microservice_with_mesh.png)
+
 
 This can simplify the architecture and make it easier to manage and scale the system. Envoy is also highly configurable and can be customized to fit the specific needs of a particular deployment.
 
