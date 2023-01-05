@@ -44,7 +44,7 @@ Metrics:
 kubectl exec -n istio-system deploy/istiod -- pilot-discovery request GET /metrics
 ```{{exec}}
 
-Istio injection sidecar can be set manually or automagically trought specific namespace
+Istio injection sidecar can be set manually or automagically trought specific namespace, every app deployed to that namespace will get injected with envoy proxy automatically.
 
 We will begin by creating the namespace WITHOUT `istio-injection` enabled.
 
@@ -99,3 +99,42 @@ To add the Istio sidecar to the `httpbin` service in the namespace `istio-lab-01
 istioctl kube-inject -f ./labs/02/httpbin.yaml --meshConfigMapName istio --injectConfigMapName istio-sidecar-injector  | kubectl -n istio-lab-01 apply -f -
 ```{{exec}}
 
+```plain
+kubectl -n istio-lab-01 get pods
+```{{exec}}
+
+> We will get something similar to:
+> ```plain
+
+> ```
+
+## Inject sidecars automatically
+
+We will begin by deleting namespace and will create again that namespace with injection enabled
+
+```plain
+kubectl delete namespace istio-lab-01
+kubectl create namespace istio-lab-01
+kubectl label namespace istio-lab-01 istio-injection=enabled
+```{{exec}}
+
+Let's run some mock `nicholasjackson/fake-service` apps:
+
+```plain
+kubectl apply -n istio-lab-01 -f ./labs/mock-apps/backend-api.yaml
+kubectl apply -n istio-lab-01 -f ./labs/mock-apps/greetings.yaml
+kubectl apply -n istio-lab-01 -f ./labs/mock-apps/order-v1.yaml
+kubectl apply -n istio-lab-01 -f ./labs/mock-apps/sleep.yaml
+NAMESPACE=istio-lab-01 URI=http://order:8080/health ./labs/02/wait.sh
+```{{exec}}
+
+After executing these commands, it is a good idea to verify the pods running in the `istio-lab-01` namespace:
+
+```plain
+kubectl -n istio-lab-01 get pods
+```{{exec}}
+
+> We will get something similar to:
+> ```plain
+
+> ```
