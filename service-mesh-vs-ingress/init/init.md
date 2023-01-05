@@ -50,6 +50,25 @@ Consider using an ingress controller if you have:
 ## Combining ingress controllers and service mesh
 In some cases, it may make sense to use both an ingress controller and a service mesh in a Kubernetes cluster. For example, you might use an ingress controller to handle incoming requests from outside the cluster and a service mesh to manage communication between services within the cluster.
 
+## Objectives
+
+- Certificate Management
+- Authentication
+- Authorization
+- Understanding concept **Gateways**
+- Understanding concept **Virtual services**
+- Understanding concept **Destination rules**
+- Understanding concept **Subsets**
+- Understanding concept **Timeouts**
+- Understanding concept **Retries**
+- Understanding concept **Circuit Breaking**
+- Understanding concept **Fault Injection**
+- Understanding concept **Requesting Routing**
+- Understanding concept **A/B Testing**
+- Viewing and collecting metrics
+- Distributed Tracing
+- Visualizing with Kiali
+
 ## Getting Started with Istio: A Hands-On Lab
 
 This lab is designed to provide a hands-on introduction to Istio, a popular open-source service mesh platform. 
