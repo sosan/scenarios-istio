@@ -77,7 +77,9 @@ kubectl -n istio-system get configmap
 ```{{exec}}
 
 
-> We will get something similar to this, and will select `istio` as `configmapname` and `istio-sidecar-injector` as `injectConfigMapName`
+> We will get something similar to this, and will select:
+> - `istio` as `meshConfigMapName`
+> - `istio-sidecar-injector` as `injectConfigMapName`
 > ```plain
 > NAME                                  DATA   AGE
 > istio                                 2      26m
