@@ -78,8 +78,7 @@ In the current istio configuration, `meshConfigMapName` we will get from:
 kubectl -n istio-system get configmap
 ```{{exec}}
 
-
-> We will get something similar to this, and will select:
+> As a result of the previous action, we will obtain something similar to what is shown. For the next command, we will select:
 > - `istio` as `meshConfigMapName`
 > - `istio-sidecar-injector` as `injectConfigMapName`
 > ```plain
