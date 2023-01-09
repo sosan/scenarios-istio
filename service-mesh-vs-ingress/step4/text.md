@@ -171,5 +171,30 @@ kubectl -n istio-lab-01 get pods
 
 > We will get something similar to:
 > ```plain
-
+> NAME                           READY   STATUS    RESTARTS   AGE
+> backend-api-68f9f9444b-k5x26   2/2     Running   0          22s
+> greetings-858487c485-72d4d     2/2     Running   0          21s
+> order-v1-6f84964467-qvc4k      2/2     Running   0          21s
+> sleep-6c7c95d6c-5r4gq          2/2     Running   0          20s
 > ```
+
+Check `2/2` for istio injected each pod or we can use:
+
+```plain
+istioctl -n istio-lab-01 analyze
+```{{exec}}
+
+> Result:
+> ✔ No validation issues found when analyzing namespace: istio-lab-01.
+
+
+To compare the difference between a namespace with Istio injection enabled and one that is not enabled (namespace default is not injection activated )
+
+```plain
+istioctl -n default analyze
+```{{exec}}
+
+> Result:
+> Info [IST0102] (Namespace default) The namespace is not enabled for Istio injection. Run 'kubectl label namespace default istio-injection=enabled' to enable it, or 'kubectl label namespace default istio-injection=disabled' to explicitly mark it as not needing injection.
+
+
