@@ -55,16 +55,17 @@ In some cases, it may make sense to use both an ingress controller and a service
 - Certificate Management
 - Authentication
 - Authorization
-- Understanding concept **Gateways**
-- Understanding concept **Virtual services**
-- Understanding concept **Destination rules**
-- Understanding concept **Subsets**
-- Understanding concept **Timeouts**
-- Understanding concept **Retries**
-- Understanding concept **Circuit Breaking**
-- Understanding concept **Fault Injection**
-- Understanding concept **Requesting Routing**
-- Understanding concept **A/B Testing**
+- Understanding concepts:
+  - **Gateways**
+  - **Virtual services**
+  - **Destination rules**
+  - **Subsets**
+  - **Timeouts**
+  - **Retries**
+  - **Circuit Breaking**
+  - **Fault Injection**
+  - **Requesting Routing**
+  - **A/B Testing**
 - Viewing and collecting metrics
 - Distributed Tracing
 - Visualizing with Kiali
