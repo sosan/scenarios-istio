@@ -23,6 +23,7 @@ So we will continue by deploying two services: HTTPBin and sleeping service curl
 ```plain
 kubectl apply -f ./labs/01/httpbin.yaml -n envoy-lab-01
 kubectl apply -f ./labs/01/sleep.yaml -n envoy-lab-01
+NAMESPACE=envoy-lab-01 URI=httpbin:8080/anything ./labs/01/wait.sh
 ```{{exec}}
 
 Wait about 50 seconds until the pods are up.
@@ -34,7 +35,7 @@ kubectl get pods -n envoy-lab-01
 To confirm that everything has been installed correctly, let's try run:
 
 ```plain
-kubectl -n envoy-lab-01 exec deploy/sleep -- curl -s httpbin:8080/anything 
+kubectl -n envoy-lab-01 exec deploy/sleep -- curl -s httpbin:8080/anything
 ```{{exec}}
 
 
@@ -73,8 +74,8 @@ We will create a ConfigMap named `envoy` using the data in the `envoy_config_bas
 ```plain
 kubectl -n envoy-lab-01 create configmap envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_base.yaml -o yaml --dry-run=client | kubectl -n envoy-lab-01 apply -f -
 kubectl -n envoy-lab-01 apply -f ./labs/01/envoy-deploy.yaml
-chmod +x ./labs/01/wait-headers.sh
-./labs/01/wait-headers.sh
+chmod +x ./labs/01/wait.sh
+NAMESPACE=envoy-lab-01 URI=http://envoy/headers ./labs/01/wait.sh
 ```{{exec}}
 
 Once we have regained cursor focus (after approximately 50 seconds), let's try calling the Envoy proxy to ensure that it correctly routes to the HTTPBin service.
