@@ -18,6 +18,10 @@
       {
         "title": "Lab Istio",
         "text": "step4/text.md"
+      },
+      {
+        "title": "Istio Gateway",
+        "text": "step5/text.md"
       }
     ],
     "finish": {
