@@ -23,7 +23,6 @@ So we will continue by deploying two services: HTTPBin and sleeping service curl
 ```plain
 kubectl apply -f ./labs/01/httpbin.yaml -n envoy-lab-01
 kubectl apply -f ./labs/01/sleep.yaml -n envoy-lab-01
-chmod +x ./labs/01/wait.sh
 NAMESPACE=envoy-lab-01 URI=httpbin:8080/anything ./labs/01/wait.sh
 ```{{exec}}
 
@@ -75,7 +74,6 @@ We will create a ConfigMap named `envoy` using the data in the `envoy_config_bas
 ```plain
 kubectl -n envoy-lab-01 create configmap envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_base.yaml -o yaml --dry-run=client | kubectl -n envoy-lab-01 apply -f -
 kubectl -n envoy-lab-01 apply -f ./labs/01/envoy-deploy.yaml
-chmod +x ./labs/01/wait.sh
 NAMESPACE=envoy-lab-01 URI=http://envoy/headers ./labs/01/wait.sh
 ```{{exec}}
 
