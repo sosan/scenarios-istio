@@ -77,13 +77,19 @@ kubectl -n istio-system get configmap
 > kube-root-ca.crt                      1      11m
 > ```
 
+> - MAIN INSTRUCTION AND YAML DEPLOY SERVICE CONFIG
+>   - istioctl kube-inject -f ./labs/02/httpbin.yaml
+> - **MESH CONFIG MAP NAME** is a Kubernetes ConfigMap that stores the Istio mesh-wide configuration. This is used to control the behavior of the Istio service mesh, and can be used to set various options such as the default outbound/inbound traffic policy:
+>   - --meshConfigMapName istio
+> - INJECTOR CONFIG MAP NAME is a Kubernetes ConfigMap that stores the configuration for the Istio sidecar injector. The sidecar injector is a tool that automatically injects an Istio sidecar proxy into the pods. This can be used to control the behavior of the sidecar injector, such as which namespaces to inject the sidecar into and which labels to use to determine which pods should be injected.
+>   - --injectConfigMapName istio-sidecar-injector
+
+
 To add the Istio sidecar to the `httpbin` service in the namespace `istio-lab-01`, run the following command:
 
 ```plain
 istioctl kube-inject -f ./labs/02/httpbin.yaml --meshConfigMapName istio --injectConfigMapName istio-sidecar-injector  | kubectl -n istio-lab-01 apply -f -
 ```{{exec}}
-
-
 
 After executing these commands, it is a good idea to verify the pods running in the `istio-lab-01` namespace:
 
