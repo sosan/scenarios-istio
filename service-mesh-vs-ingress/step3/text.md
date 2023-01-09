@@ -23,6 +23,7 @@ So we will continue by deploying two services: HTTPBin and sleeping service curl
 ```plain
 kubectl apply -f ./labs/01/httpbin.yaml -n envoy-lab-01
 kubectl apply -f ./labs/01/sleep.yaml -n envoy-lab-01
+chmod +x ./labs/01/wait.sh
 NAMESPACE=envoy-lab-01 URI=httpbin:8080/anything ./labs/01/wait.sh
 ```{{exec}}
 
