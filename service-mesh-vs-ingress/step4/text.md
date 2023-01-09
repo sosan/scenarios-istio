@@ -160,7 +160,7 @@ kubectl apply -n istio-lab-01 -f ./labs/mock-apps/backend-api.yaml
 kubectl apply -n istio-lab-01 -f ./labs/mock-apps/greetings.yaml
 kubectl apply -n istio-lab-01 -f ./labs/mock-apps/order-v1.yaml
 kubectl apply -n istio-lab-01 -f ./labs/mock-apps/sleep.yaml
-NAMESPACE=istio-lab-01 URI=http://order:8080/health ./labs/02/wait.sh
+kubectl wait --for=condition=Ready pod --all -n istio-lab-01
 ```{{exec}}
 
 After executing these commands, it is a good idea to verify the pods running in the `istio-lab-01` namespace:
