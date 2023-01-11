@@ -6,17 +6,18 @@ We recommend installing the istio-ingress gateway in a namespace separate from i
 
 ```plain
 kubectl create namespace istio-ingress
-istioctl install -y -n istio-ingress -f ./labs/03/ingress-gateways.yaml --revision 1-8-3
-kubectl wait --for=condition=Ready pod --all -n istio-ingress
+kubectl apply -f ./labs/03/ingress-gateway.yaml -n istio-ingress
 ```{{exec}}
 
 We should verify that the ingress gateway was installed correctly:
 
 ```plain
-kubectl get po -n istio-ingress
+kubectl get gateway -n istio-ingress
 ```{{exec}}
 
 > Result: 
+> NAME                    AGE
+> istio-ingress-gateway   26s
 >
 
 The ingress gateway will create a Kubernetes Service of type LoadBalancer, which will provide an IP address that can be used to access the gateway

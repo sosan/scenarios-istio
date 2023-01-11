@@ -1,26 +1,60 @@
-apiVersion: install.istio.io/v1alpha1
-kind: IstioOperator
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
 metadata:
-  name: istio-ingress-gateway-install
+  name: mock-apps-gateway
 spec:
-  profile: empty
-  values:
-    gateways:
-      istio-ingress-gateway:
-        autoscaleEnabled: false
-  components:
-    ingressGateways:
-    - name: istio-ingress-gateway
-      namespace: istio-ingress
-      enabled: true
-      k8s:
-        overlays:
-        - apiVersion: apps/v1
-          kind: Deployment
-          name: istio-ingress-gateway
-          patches:
-          - path: spec.template.spec.containers[name:istio-proxy].lifecycle
-            value:
-              preStop:
-                exec:
-                  command: ["sh", "-c", "sleep 5"]
+  selector:
+    istio: istio-ingressgateway #ingressgateway
+  servers:
+  - port:
+      name: http
+      number: 80
+      protocol: HTTP
+    hosts:
+    - istio.lab-01.com
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: httpbin-app
+spec:
+  hosts:
+  - istio.lab-01.com
+  gateways:
+  - mock-apps-gateway.istio-ingress.svc.cluster.local
+  http:
+  - match:
+    - uri:
+        exact: /
+    route:
+    - destination:
+        host: backend-api
+        port:
+          number: 8080
+# 
+# 
+# apiVersion: networking.istio.io/v1alpha3
+# kind: Gateway
+# metadata:
+#   name: my-gateway
+# spec:
+#   selector:
+#     istio: ingressgateway # use istio default ingress gateway
+#   servers:
+#   - port:
+#       name: http
+#       number: 80
+#       protocol: HTTP
+#     hosts:
+#     - "*"
+#   - port:
+#       name: https
+#       number: 443
+#       protocol: HTTPS
+#     tls:
+#       mode: SIMPLE
+#       privateKey: /etc/istio/ingressgateway-certs/tls.key
+#       serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
+#     hosts:
+#     - "*"
+
