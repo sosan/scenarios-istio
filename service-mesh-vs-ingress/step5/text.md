@@ -1,3 +1,18 @@
+## Istio Gateways
+
+In Istio, the default gateway is a virtual gateway that is deployed in a Kubernetes cluster to handle incoming and outgoing HTTP/TCP traffic. The default gateway is responsible for routing incoming requests to the appropriate service based on the host header or path, as well as for handling outbound traffic to external services. It is typically deployed as a Kubernetes service and uses Istio's Envoy proxies to handle traffic.
+
+The default gateway is an important component of Istio as it allows you to control and route traffic in your mesh, even traffic that originates from outside the mesh. This is useful for scenarios where you want to expose services to external clients, or where you want to route traffic to different services based on different criteria.
+
+In summary, the default gateway is the entry point of the traffic to the istio mesh, it handle the ingress and egress traffic, it routes the traffic to the appropriate service, and it is responsible for handling external service traffic.
+
+![Istio gateway](https://raw.githubusercontent.com/sosan/scenarios-istio/main/service-mesh-vs-ingress/assets/images/istio_gateway.svg)
+
+This diagram shows that external traffic sends a request to the default gateway, which then routes the request to the appropriate service (in this case, Service A). Service A processes the request and sends a response back to the default gateway, which then sends the response back to the external traffic.
+
+Please note that this is a simple example, and in reality the routing decision might be more complex, depending on the service, the path and the headers of the request.
+
+
 ## Istio Ingress Gateways
 
 The Istio ingress gateway is a specialized proxy that sits at the edge of the mesh and controls access to the services within the cluster from the public network. It is exposed by a Kubernetes Service of type LoadBalancer, which can be queried using the appropriate command.
