@@ -11,11 +11,11 @@ kubectl get svc -n istio-system --selector istio=ingressgateway
 > istio-ingressgateway   LoadBalancer   10.98.230.210   <pending>     15021:32255/TCP,80:31165/TCP,443:32507/TCP,31400:30603/TCP,15443:31674/TCP   10m
 > ```
 
-When using kind, the external IP address of the Istio ingress gateway will not be assigned a static IP address, it will be in a `Pending` state.
+When using `kind`, the external IP address of the Istio ingress gateway will not be assigned a static IP address, it will be in a `Pending` state.
 
 However, in a managed Kubernetes cluster, the cloud provider will assign a static IP to the load balancer that can be used to route traffic to the gateway. 
 
-To work around this issue with kind, you can use the "port-forward" command to forward the ingress gateway to your local environment by opening a second terminal, executing the command and keeping the terminal running for the duration of your work.
+To work around this issue, you can use the "port-forward" command to forward the ingress gateway:
 
 ```plain
 kubectl port-forward -n istio-system svc/istio-ingressgateway 8081:80 >> /dev/null &
@@ -83,12 +83,37 @@ kubectl get gateway -n istio-ingress
 
 The ingress gateway will create a Kubernetes Service of type LoadBalancer, which will provide an IP address that can be used to access the gateway
 
+kubectl get svc -n istio-ingress --selector istio=ingressgateway
+
 ```plain
-```
+kubectl get svc -n istio-ingress istio-ingressgateway -o jsonpath="{.status.loadBalancer.ingress[0].ip}"
+```{{exec}}
+
+
+```plain
+kubectl port-forward -n istio-system svc/istio-ingressgateway 8081:80 >> /dev/null &
+```{{exec}}
+
+When using `kind`, the external IP address of the Istio ingress gateway will not be assigned a static IP address, it will be in a `Pending` state.
+
+However, in a managed Kubernetes cluster, the cloud provider will assign a static IP to the load balancer that can be used to route traffic to the gateway. 
+
+To work around this issue, you can use the "port-forward" command to forward the ingress gateway:
+
+```plain
+kubectl port-forward -n istio-system svc/istio-ingressgateway 8081:80 >> /dev/null &
+```{{exec}}
+
+```plain
+lsof -i :8081
+```{{exec}}
+
+
+
 
 kubectl get gateways.networking.istio.io mock-apps-gateway -n istio-ingress  -o jsonpath='{.status.addresses[*].value}'
 
-kubectl get service istio-ingressgateway -n istio-system  -o jsonpath='{.status.addresses[*].value}'
+kubectl get service -n istio-ingress istio-ingressgateway   -o jsonpath='{.status.addresses[*].value}'
 
 kubectl get gateway -A
 
