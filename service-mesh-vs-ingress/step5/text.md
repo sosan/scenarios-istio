@@ -32,8 +32,6 @@ lsof -i :8081
 > kubectl 73923 root    9u  IPv6 425760      0t0  TCP ip6-localhost:tproxy (LISTEN)
 > ```
 
-
-
 By using the "port-forward" command, traffic to localhost:8081 will now be directed to the ingress gateway. If you open curl and type request in that address, you will find that the gateway will reject your request. This is the default behavior of the gateway.
 
 ```plain
@@ -45,9 +43,20 @@ curl -v localhost:8081
 > 50661 portforward.go:406] an error occurred forwarding 8081 -> 8080: error forwarding port 8080
 > ```
 
-### Admit traffic
+## Allow incoming traffic to the gateway
 
+A service mesh can have multiple ingress gateways. This is typically used in multi-tenant environments. In this case, we will installing the istio-ingress gateway in a namespace `istio-ingress` separate for increased security and isolation.
 
+```plain
+kubectl create namespace istio-ingress
+istioctl install -y -n istio-ingress -f ./labs/03/istio-install-gateway.yaml
+```{{exec}}
+
+```plain
+✔ Ingress gateways installed                                                                                       
+✔ Installation complete                                                                                            
+[...]
+```
 
 Istio uses the `Gateway` kind resource to control the types of traffic that are allowed into the mesh. To configure the ingress gateway to accept HTTP traffic on port 80, you can use the following configuration.
 
@@ -55,24 +64,7 @@ Istio uses the `Gateway` kind resource to control the types of traffic that are 
 cat ./labs/03/ingress-gateway.yaml
 ```{{exec}}
 
-A service mesh can have multiple ingress gateways. This is typically used in multi-tenant environments. In this case, we will installing the istio-ingress gateway in a namespace separate from istiod for increased security and isolation. When installing, make sure to use a revision that is compatible with the control plane in the istio-ingress namespace
-
-
 ```plain
-istioctl install -y -n istio-ingress -f ./labs/03/istio-install-gateway.yaml
-```{{exec}}
-
-```plain
-✔ Ingress gateways installed                                                                                       
-✔ Installation complete                                                                                            
-...
-```
-
-<!-- we will be applying the Gateway configuration to the default ingress gateway, which is labeled with "istio=ingressgateway". -->
-
-
-```plain
-kubectl create namespace istio-ingress
 kubectl apply -f ./labs/03/ingress-gateway.yaml -n istio-ingress
 ```{{exec}}
 
