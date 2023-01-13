@@ -11,7 +11,9 @@ kubectl get svc -n istio-system --selector istio=ingressgateway
 > istio-ingressgateway   LoadBalancer   10.98.230.210   <pending>     15021:32255/TCP,80:31165/TCP,443:32507/TCP,31400:30603/TCP,15443:31674/TCP   10m
 > ```
 
-When using kind, the external IP address of the Istio ingress gateway will not be assigned a static IP address, it will be in a "Pending" state. However, in a managed Kubernetes cluster, the cloud provider will assign a static IP to the load balancer that can be used to route traffic to the gateway. 
+When using kind, the external IP address of the Istio ingress gateway will not be assigned a static IP address, it will be in a `Pending` state.
+
+However, in a managed Kubernetes cluster, the cloud provider will assign a static IP to the load balancer that can be used to route traffic to the gateway. 
 
 To work around this issue with kind, you can use the "port-forward" command to forward the ingress gateway to your local environment by opening a second terminal, executing the command and keeping the terminal running for the duration of your work.
 
@@ -23,6 +25,15 @@ kubectl port-forward -n istio-system svc/istio-ingressgateway 8081:80 >> /dev/nu
 lsof -i :8081
 ```{{exec}}
 
+> Result: 
+> ```plain
+> COMMAND   PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+> kubectl 73923 root    8u  IPv4 425756      0t0  TCP localhost:tproxy (LISTEN)
+> kubectl 73923 root    9u  IPv6 425760      0t0  TCP ip6-localhost:tproxy (LISTEN)
+> ```
+
+
+
 By using the "port-forward" command, traffic to localhost:8081 will now be directed to the ingress gateway. If you open curl and type request in that address, you will find that the gateway will reject your request. This is the default behavior of the gateway.
 
 ```plain
@@ -31,7 +42,7 @@ curl -v localhost:8081
 
 > Result:
 > ```plain
-> 50379 portforward.go:406] an error occurred forwarding 8080 -> 8080: error forwarding port 
+> 50661 portforward.go:406] an error occurred forwarding 8081 -> 8080: error forwarding port 8080
 > ```
 
 ### Admit traffic
@@ -46,11 +57,18 @@ cat ./labs/03/ingress-gateway.yaml
 
 A service mesh can have multiple ingress gateways. This is typically used in multi-tenant environments. In this case, we will installing the istio-ingress gateway in a namespace separate from istiod for increased security and isolation. When installing, make sure to use a revision that is compatible with the control plane in the istio-ingress namespace
 
+
+```plain
 istioctl install -y -n istio-ingress -f ./labs/03/istio-install-gateway.yaml
+```{{exec}}
 
+```plain
+✔ Ingress gateways installed                                                                                       
+✔ Installation complete                                                                                            
+...
+```
 
-
-we will be applying the Gateway configuration to the default ingress gateway, which is labeled with "istio=ingressgateway".
+<!-- we will be applying the Gateway configuration to the default ingress gateway, which is labeled with "istio=ingressgateway". -->
 
 
 ```plain
