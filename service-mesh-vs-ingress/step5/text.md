@@ -58,6 +58,31 @@ istioctl install -y -n istio-ingress -f ./labs/03/istio-install-gateway.yaml
 [...]
 ```
 
+We should verify that the ingress gateway was installed correctly:
+
+```plain
+kubectl get service -A -l istio=ingressgateway
+```
+
+> Result:
+> ```plain
+> NAMESPACE       NAME                   TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                                                                   
+> istio-ingress   istio-ingressgateway   LoadBalancer   10.96.178.175   <pending>     15021:30304/TCP,80:30507/TCP,443:31811/TCP                                
+> istio-system    istio-ingressgateway   LoadBalancer   10.101.85.163   <pending>     15021:30449/TCP,80:31252/TCP,443:30696/TCP,31400:31143/TCP,15443:31990/TCP
+> ```
+
+After the kubectl command, we see two services as `LoadBalancer`, but with the `EXTERNAL-IP` in pending.
+
+The `Loadbalancer` service created earlier: 
+- if we are in a Kubernetes managed or a MetalLB environment, the cloud provider or MetalLB will assign an IP to that loadbalancer. 
+- Otherwise, it will not be possible to assign an IP and its status will remain `pending`.
+
+To solve this issue, we can use the port-forward command to manually route traffic towards the ingress gateway.
+
+We focus on the loadbalancer in the namespace within `istio-ingress`
+
+<!-- Modify config gateway
+
 Istio uses the `Gateway` kind resource to control the types of traffic that are allowed into the mesh. To configure the ingress gateway to accept HTTP traffic on port 80, you can use the following configuration.
 
 ```plain
@@ -66,9 +91,9 @@ cat ./labs/03/ingress-gateway.yaml
 
 ```plain
 kubectl apply -f ./labs/03/ingress-gateway.yaml -n istio-ingress
-```{{exec}}
+```{{exec}} -->
 
-We should verify that the ingress gateway was installed correctly:
+<!-- We should verify that the ingress gateway was installed correctly:
 
 ```plain
 kubectl get gateway -n istio-ingress
@@ -79,9 +104,9 @@ kubectl get gateway -n istio-ingress
 > NAME                    AGE
 > mock-apps-gateway       26s
 > ```
->
+> -->
 
-The ingress gateway will create a Kubernetes Service of type LoadBalancer, which will provide an IP address that can be used to access the gateway
+The ingress gateway created a Kubernetes Service of type LoadBalancer, which will provide an IP address that can be used to access the gateway
 
 kubectl get svc -n istio-ingress --selector istio=ingressgateway
 
@@ -109,17 +134,15 @@ lsof -i :8081
 ```{{exec}}
 
 
-
+kubectl get service -A -l istio=ingressgateway
 
 kubectl get gateways.networking.istio.io mock-apps-gateway -n istio-ingress  -o jsonpath='{.status.addresses[*].value}'
-
 kubectl get service -n istio-ingress istio-ingressgateway   -o jsonpath='{.status.addresses[*].value}'
 
-kubectl get gateway -A
 
 kubectl get virtualservices -n istio-ingress
 
-
+kubectl get gateway -A
 
 
 ```plain
