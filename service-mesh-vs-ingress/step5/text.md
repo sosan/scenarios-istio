@@ -77,7 +77,7 @@ We should verify that the ingress gateway was installed correctly:
 
 ```plain
 kubectl get service -A -l istio=ingressgateway
-```
+```{{exec}}
 
 > Result:
 > ```plain
@@ -125,18 +125,21 @@ The ingress gateway created a Kubernetes Service of type LoadBalancer, which wil
 
 kubectl get svc -n istio-ingress --selector istio=ingressgateway
 
+To retrieve the IP address of the load balancer for the `istio-ingressgateway` service in the `istio-ingress` namespace:
+
 ```plain
 kubectl get svc -n istio-ingress istio-ingressgateway -o jsonpath="{.status.loadBalancer.ingress[0].ip}"
 ```{{exec}}
 
+<!-- If 
 
 ```plain
 kubectl port-forward -n istio-system svc/istio-ingressgateway 8081:80 >> /dev/null &
-```{{exec}}
+```{{exec}} -->
 
 When using `kind`, the external IP address of the Istio ingress gateway will not be assigned a static IP address, it will be in a `Pending` state.
 
-However, in a managed Kubernetes cluster, the cloud provider will assign a static IP to the load balancer that can be used to route traffic to the gateway. 
+However, in a managed Kubernetes cluster or MetalLB, the cloud provider or MetalLB will assign a static IP to the load balancer that can be used to route traffic to the gateway. 
 
 To work around this issue, you can use the "port-forward" command to forward the ingress gateway:
 
