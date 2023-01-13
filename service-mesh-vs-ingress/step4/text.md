@@ -163,6 +163,14 @@ kubectl apply -n istio-lab-01 -f ./labs/mock-apps/sleep.yaml
 kubectl wait --for=condition=Ready pod --all -n istio-lab-01
 ```{{exec}}
 
+> ```plain
+> Result:
+> pod/backend-api-68f9f9444b-wcp6j condition met
+> pod/greetings-858487c485-gb545 condition met
+> pod/order-v1-6f84964467-6b2gj condition met
+> pod/sleep-6c7c95d6c-js4nv condition met
+> ```
+
 After executing these commands, it is a good idea to verify the pods running in the `istio-lab-01` namespace:
 
 ```plain
