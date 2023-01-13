@@ -11,7 +11,7 @@ spec:
       number: 80
       protocol: HTTP
     hosts:
-    - istio.lab-01.com
+    - "*"
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -19,7 +19,7 @@ metadata:
   name: httpbin-app
 spec:
   hosts:
-  - istio.lab-01.com
+  - "*"
   gateways:
   - istio-ingress/mock-apps-gateway # <namespace>/<name> format
   http:
