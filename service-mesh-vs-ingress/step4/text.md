@@ -19,6 +19,17 @@ istioctl version
 > data plane version: 1.16.1 (2 proxies)
 > ```
 
+We verify that we have installed at the beginning of this course:
+
+```plain
+kubectl get pods -n istio-system
+```{{exec}}
+
+The installed components are:
+- Istio egress gateway – used for securing egress traffic
+- Istio ingress gateway – the entry point of traffic coming into your cluster
+- Istiod – Istio’s control plane that configures the service proxies
+
 From this point, we can use the debug endpoints of the Istio control plane to determine which services are currently running and what Istio has identified.
 
 All services/external services from all registries:

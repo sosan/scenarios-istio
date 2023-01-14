@@ -6,11 +6,8 @@ spec:
   profile: empty
   values:
     gateways:
-      ingress-demo:
+      istio-ingressgateway:
         autoscaleEnabled: false
-        namespaceSelector:
-            matchLabels:
-              istio: istio-ingress
         # resources:
         #   requests:
         #     cpu: 500m
@@ -20,14 +17,14 @@ spec:
         #     memory: 2Gi
   components:
     ingressGateways:
-    - name: ingress-demo
+    - name: istio-ingressgateway
       namespace: istio-ingress
       enabled: true
       k8s:
         overlays:
         - apiVersion: apps/v1
           kind: Deployment
-          name: ingress-demo
+          name: istio-ingressgateway
           patches:
           - path: spec.template.spec.containers[name:istio-proxy].lifecycle
             value:
