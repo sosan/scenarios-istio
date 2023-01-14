@@ -1,10 +1,22 @@
 ## Istio Gateways
 
+<!-- A Gateway configures a load balancer for HTTP/TCP traffic, regardless of where it will be running. Any number of gateways can exist within the mesh and multiple different gateway implementations can co-exist. In fact, a gateway configuration can be bound to a particular workload by specifying the set of workload (pod) labels as part of the configuration, allowing users to reuse off the shelf network appliances by writing a simple gateway controller.
+
+For ingress traffic management, you might ask: Why not reuse Kubernetes Ingress APIs? The Ingress APIs proved to be incapable of expressing Istio’s routing needs. By trying to draw a common denominator across different HTTP proxies, the Ingress is only able to support the most basic HTTP routing and ends up pushing every other feature of modern proxies into non-portable annotations.
+
+Istio Gateway overcomes the Ingress shortcomings by separating the L4-L6 spec from L7. It only configures the L4-L6 functions (e.g., ports to expose, TLS configuration) that are uniformly implemented by all good L7 proxies. Users can then use standard Istio rules to control HTTP requests as well as TCP traffic entering a Gateway by binding a VirtualService to it.
+
 In Istio, the default gateway is a virtual gateway that is deployed in a Kubernetes cluster to handle incoming and outgoing HTTP/TCP traffic. The default gateway is responsible for routing incoming requests to the appropriate service based on the host header or path, as well as for handling outbound traffic to external services. It is typically deployed as a Kubernetes service and uses Istio's Envoy proxies to handle traffic.
 
 The default gateway is an important component of Istio as it allows you to control and route traffic in your mesh, even traffic that originates from outside the mesh. This is useful for scenarios where you want to expose services to external clients, or where you want to route traffic to different services based on different criteria.
 
-In summary, the default gateway is the entry point of the traffic to the istio mesh, it handle the ingress and egress traffic, it routes the traffic to the appropriate service, and it is responsible for handling external service traffic.
+In summary, the default gateway is the entry point of the traffic to the istio mesh, it handle the ingress and egress traffic, it routes the traffic to the appropriate service, and it is responsible for handling external service traffic. -->
+
+The Istio Gateway is a load balancer for HTTP/TCP traffic that can be configured to work in any environment. It allows multiple gateways to exist within a service mesh and for different gateway implementations to coexist. It can also be bound to specific workloads by specifying a set of labels, allowing for the use of pre-existing network appliances.
+
+The Istio Gateway is used for ingress traffic management and addresses limitations in the Kubernetes Ingress API by separating L4-L6 configurations from L7
+
+Istio Gateway overcomes the Ingress shortcomings by separating the L4-L6 spec from L7. It only configures the L4-L6 functions (e.g., ports to expose, TLS configuration) that are uniformly implemented by all good L7 proxies. Users can then use standard Istio rules to control HTTP requests as well as TCP traffic entering a Gateway by binding a VirtualService to it.
 
 ![Istio gateway](https://raw.githubusercontent.com/sosan/scenarios-istio/main/service-mesh-vs-ingress/assets/images/istio_gateway.svg)
 
@@ -37,6 +49,8 @@ To work around this issue, you can use the "port-forward" command to forward the
 ```plain
 kubectl port-forward -n istio-system svc/istio-ingressgateway 8081:80 >> /dev/null &
 ```{{exec}}
+
+kubectl port-forward -n istio-ingress virtualservices/backend-api-app 8081:80 &
 
 ```plain
 lsof -i :8081
@@ -152,15 +166,22 @@ However, in a managed Kubernetes cluster or MetalLB, the cloud provider or Metal
 To work around this issue, you can use the "port-forward" command to forward the ingress gateway:
 
 ```plain
-kubectl port-forward -n istio-system svc/istio-ingressgateway 8081:80 >> /dev/null &
+kubectl port-forward -n istio-ingress svc/istio-ingressgateway 8081:80 >> /dev/null &
 ```{{exec}}
 
 ```plain
 lsof -i :8081
 ```{{exec}}
 
-kubectl apply -f labs/03/ingress-gateway.yaml -n istio-ingress
 
+A VirtualService defines a set of traffic routing rules to apply when a host is addressed. It allows you to route traffic to different versions of a service or to different services based on certain conditions. This API endpoint allows you to create, read, update, and delete VirtualServices in an Istio service mesh.
+
+```plain
+kubectl apply -f labs/03/ingress-gateway.yaml -n istio-ingress
+```{{exec}}
+
+
+kubectl get gateway -A
 
 kubectl get service -A -l istio=ingressgateway
 
