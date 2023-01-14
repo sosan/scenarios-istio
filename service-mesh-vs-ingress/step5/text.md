@@ -159,6 +159,8 @@ kubectl port-forward -n istio-system svc/istio-ingressgateway 8081:80 >> /dev/nu
 lsof -i :8081
 ```{{exec}}
 
+kubectl apply -f labs/03/ingress-gateway.yaml -n istio-ingress
+
 
 kubectl get service -A -l istio=ingressgateway
 
