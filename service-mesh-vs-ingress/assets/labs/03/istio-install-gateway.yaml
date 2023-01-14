@@ -6,18 +6,18 @@ spec:
   profile: empty
   values:
     gateways:
-      istio-ingressgateway:
+      ingress-demo:
         autoscaleEnabled: false
   components:
     ingressGateways:
-    - name: istio-ingressgateway
+    - name: ingress-demo
       namespace: istio-ingress
       enabled: true
       k8s:
         overlays:
         - apiVersion: apps/v1
           kind: Deployment
-          name: istio-ingressgateway
+          name: ingress-demo
           patches:
           - path: spec.template.spec.containers[name:istio-proxy].lifecycle
             value:

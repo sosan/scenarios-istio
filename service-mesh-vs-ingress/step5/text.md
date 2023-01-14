@@ -15,7 +15,9 @@ Please note that this is a simple example, and in reality the routing decision m
 
 ## Istio Ingress Gateways
 
-The Istio ingress gateway is a specialized proxy that sits at the edge of the mesh and controls access to the services within the cluster from the public network. It is exposed by a Kubernetes Service of type LoadBalancer, which can be queried using the appropriate command.
+The Istio ingress gateway is a specialized proxy that sits at the edge of the mesh and controls access to the services within the cluster from the public network.
+
+It is exposed by a Kubernetes Service of type LoadBalancer, which can be queried using:
 
 ```plain
 kubectl get svc -n istio-system --selector istio=ingressgateway
@@ -47,7 +49,7 @@ lsof -i :8081
 > kubectl 73923 root    9u  IPv6 425760      0t0  TCP ip6-localhost:tproxy (LISTEN)
 > ```
 
-By using the "port-forward" command, traffic to localhost:8081 will now be directed to the ingress gateway. If you open curl and type request in that address, you will find that the gateway will reject your request. This is the default behavior of the gateway.
+By using the "port-forward" command, traffic to localhost:8081 will now be directed to the ingress gateway. If you open curl and type request in that address, you will find that the gateway will reject your request. **This is the default behavior of the gateway.**
 
 ```plain
 curl -v localhost:8081
@@ -57,6 +59,8 @@ curl -v localhost:8081
 > ```plain
 > 50661 portforward.go:406] an error occurred forwarding 8081 -> 8080: error forwarding port 8080
 > ```
+
+**As we expected, the gateway has responded with an error.**
 
 ## Allow incoming traffic to the gateway
 
@@ -86,15 +90,19 @@ kubectl get service -A -l istio=ingressgateway
 > istio-system    istio-ingressgateway   LoadBalancer   10.101.85.163   <pending>     15021:30449/TCP,80:31252/TCP,443:30696/TCP,31400:31143/TCP,15443:31990/TCP
 > ```
 
-After the kubectl command, we see two services as `LoadBalancer`, but with the `EXTERNAL-IP` in pending.
+After the kubectl command, we see two services as `LoadBalancer`, the default gateway is in `istio-system` namespace, but both with the `EXTERNAL-IP` in pending.
 
-The `Loadbalancer` service created earlier: 
+The new `Loadbalancer` service created earlier: 
 - if we are in a Kubernetes managed or a MetalLB environment, the cloud provider or MetalLB will assign an IP to that loadbalancer. 
 - Otherwise, it will not be possible to assign an IP and its status will remain `pending`.
 
 To solve this issue, we can use the port-forward command to manually route traffic towards the ingress gateway.
 
-We focus on the loadbalancer in the namespace within `istio-ingress`
+We will focus on the loadbalancer in the namespace within `istio-ingress`:
+
+```plain
+kubectl get service -n istio-ingress
+```{{exec}}
 
 <!-- Modify config gateway
 
