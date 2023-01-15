@@ -4,7 +4,7 @@ metadata:
   name: mock-apps-gateway
 spec:
   selector:
-    istio: ingress-demo # istio-ingressgateway #ingressgateway
+    istio: istio-ingressgateway #ingressgateway
   servers:
   - port:
       name: http
@@ -31,9 +31,6 @@ spec:
         host: backend-api
         port:
           number: 8080
-        # namespaceSelector:
-        #   matchLabels:
-        #     app: backend-api
 
 # apiVersion: networking.istio.io/v1alpha3
 # kind: Gateway
