@@ -25,10 +25,18 @@ We verify that we have installed at the beginning of this course:
 kubectl get pods -n istio-system
 ```{{exec}}
 
+> Result:
+> ```plain
+> NAME                                    READY   STATUS    RESTARTS   AGE
+> istio-egressgateway-556484c697-nbd62    1/1     Running   0          30s
+> istio-ingressgateway-85c5744c4f-8gs89   1/1     Running   0          30s
+> istiod-6948f8fb67-mftds                 1/1     Running   0          36s
+> ```
+
 The installed components are:
-- Istio egress gateway – used for securing egress traffic
-- Istio ingress gateway – the entry point of traffic coming into your cluster
-- Istiod – Istio’s control plane that configures the service proxies
+- **Istio egress gateway** – used for securing egress traffic
+- **Istio ingress gateway** – the entry point of traffic coming into your cluster
+- **Istiod** – Istio’s control plane that configures the service proxies
 
 From this point, we can use the debug endpoints of the Istio control plane to determine which services are currently running and what Istio has identified.
 
@@ -43,17 +51,40 @@ All endpoints:
 kubectl exec -n istio-system deploy/istiod -- pilot-discovery request GET /debug/endpointz | jq
 ```{{exec}}
 
-Listeners and routes
+Metrics:
+```plain
+kubectl exec -n istio-system deploy/istiod -- pilot-discovery request GET /metrics
+```{{exec}}
 
+Listeners and routes
 ```plain
 kubectl exec -n istio-system deploy/istiod -- pilot-discovery request GET /debug/adsz | jq
 ```{{exec}}
 
-Metrics:
+We will focus on listening with the following command:
 
 ```plain
-kubectl exec -n istio-system deploy/istiod -- pilot-discovery request GET /metrics
+kubectl exec -n istio-system deploy/istiod -- pilot-discovery request GET /debug/adsz | jq '.clients[0].watches."type.googleapis.com/envoy.config.endpoint.v3.ClusterLoadAssignment"'
 ```{{exec}}
+
+> Resultado:
+> "outbound|15443||istio-ingressgateway.istio-system.svc.cluster.local",
+> "outbound|31400||istio-ingressgateway.istio-system.svc.cluster.local",
+> "outbound|443||istio-ingressgateway.istio-system.svc.cluster.local",
+> "outbound|80||istio-ingressgateway.istio-system.svc.cluster.local",
+> "outbound|15021||istio-ingressgateway.istio-system.svc.cluster.local",
+> "outbound|443||istio-egressgateway.istio-system.svc.cluster.local",
+> "outbound|80||istio-egressgateway.istio-system.svc.cluster.local",
+> "outbound|15012||istiod.istio-system.svc.cluster.local",
+> "outbound|443||istiod.istio-system.svc.cluster.local",
+> "outbound|9153||kube-dns.kube-system.svc.cluster.local",
+> "outbound|15010||istiod.istio-system.svc.cluster.local",
+> "outbound|15014||istiod.istio-system.svc.cluster.local",
+> "outbound|443||kubernetes.default.svc.cluster.local",
+> "outbound|53||kube-dns.kube-system.svc.cluster.local"
+
+
+
 
 Istio injection sidecar can be set manually or automagically trought specific namespace, every app deployed to that namespace will get injected with envoy proxy automatically.
 
