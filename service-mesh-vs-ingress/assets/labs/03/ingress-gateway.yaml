@@ -8,7 +8,7 @@ spec:
   servers:
   - port:
       name: http
-      number: 80
+      number: 8123
       protocol: HTTP
     hosts:
     - "*"
@@ -19,7 +19,7 @@ metadata:
   name: backend-api-app
 spec:
   hosts:
-  - "*"
+  - "backend-api.istio-lab-01.svc.cluster.local"
   gateways:
   - istio-ingress/mock-apps-gateway # <namespace>/<name> format
   http:

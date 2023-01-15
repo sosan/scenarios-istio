@@ -67,7 +67,8 @@ We will focus on listening with the following command:
 kubectl exec -n istio-system deploy/istiod -- pilot-discovery request GET /debug/adsz | jq '.clients[0].watches."type.googleapis.com/envoy.config.endpoint.v3.ClusterLoadAssignment"'
 ```{{exec}}
 
-> Resultado:
+> Result:
+> ```plain
 > "outbound|15443||istio-ingressgateway.istio-system.svc.cluster.local",
 > "outbound|31400||istio-ingressgateway.istio-system.svc.cluster.local",
 > "outbound|443||istio-ingressgateway.istio-system.svc.cluster.local",
@@ -82,7 +83,7 @@ kubectl exec -n istio-system deploy/istiod -- pilot-discovery request GET /debug
 > "outbound|15014||istiod.istio-system.svc.cluster.local",
 > "outbound|443||kubernetes.default.svc.cluster.local",
 > "outbound|53||kube-dns.kube-system.svc.cluster.local"
-
+> ```
 
 
 
