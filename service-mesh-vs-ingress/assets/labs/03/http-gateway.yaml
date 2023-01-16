@@ -12,26 +12,45 @@ spec:
       protocol: HTTP
     hosts:
     - "*"
+# ---
+# apiVersion: networking.istio.io/v1alpha3
+# kind: VirtualService
+# metadata:
+#   name: sa-external-services
+# spec:
+#   hosts:
+#   - "*"
+#   gateways:
+#   - http-gateway                      # 1
+#   http:
+#   - match:
+#     - uri:
+#         exact: /
+#     # - uri:
+#     #     prefix: /static
+#     # - uri:
+#     #     regex: '^.*\.(ico|png|jpg)$'
+#     route:
+#     - destination:
+#         host: sa-frontend             # 2
+#         port:
+#           number: 80
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: sa-external-services
+  name: backend-api-external-service
 spec:
   hosts:
-  - "*"
+  - "*" #"backend-api.istio-lab-01.svc.cluster.local"
   gateways:
-  - http-gateway                      # 1
+  - istio-ingress/mock-apps-gateway # <namespace>/<name> format
   http:
   - match:
     - uri:
         exact: /
-    - uri:
-        prefix: /static
-    - uri:
-        regex: '^.*\.(ico|png|jpg)$'
     route:
     - destination:
-        host: sa-frontend             # 2
+        host: backend-api
         port:
-          number: 80
+          number: 8080
