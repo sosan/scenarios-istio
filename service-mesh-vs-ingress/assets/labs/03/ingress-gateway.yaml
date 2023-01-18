@@ -4,7 +4,7 @@ metadata:
   name: mock-apps-gateway
 spec:
   selector:
-    istio: istio-ingressgateway #ingressgateway
+    istio: istio-ingressgateway2 #istio-ingressgateway #ingressgateway
   servers:
   - port:
       name: http
