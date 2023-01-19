@@ -6,6 +6,8 @@ spec:
   profile: empty
   values:
     gateways:
+      istio-ingressgateway2:
+        autoscaleEnabled: false
       istio-ingressgateway:
         autoscaleEnabled: false
         # resources:
