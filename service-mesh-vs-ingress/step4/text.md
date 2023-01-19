@@ -199,7 +199,7 @@ kubectl label namespace istio-lab-01 istio-injection=enabled
 Let's run some mock `nicholasjackson/fake-service` apps:
 
 ```plain
-kubectl apply -n istio-lab-01 -f ./labs/mock-apps/backend-api.yaml
+kubectl apply -n istio-lab-01 -f ./labs/mock-apps/follow.yaml
 kubectl apply -n istio-lab-01 -f ./labs/mock-apps/greetings.yaml
 kubectl apply -n istio-lab-01 -f ./labs/mock-apps/order-v1.yaml
 kubectl apply -n istio-lab-01 -f ./labs/mock-apps/sleep.yaml
@@ -208,7 +208,7 @@ kubectl wait --for=condition=Ready pod --all -n istio-lab-01
 
 > ```plain
 > Result:
-> pod/backend-api-68f9f9444b-wcp6j condition met
+> pod/follow-68f9f9444b-wcp6j condition met
 > pod/greetings-858487c485-gb545 condition met
 > pod/order-v1-6f84964467-6b2gj condition met
 > pod/sleep-6c7c95d6c-js4nv condition met
@@ -223,7 +223,7 @@ kubectl -n istio-lab-01 get pods
 > We will get something similar to:
 > ```plain
 > NAME                           READY   STATUS    RESTARTS   AGE
-> backend-api-68f9f9444b-k5x26   2/2     Running   0          22s
+> follow-68f9f9444b-k5x26   2/2     Running   0          22s
 > greetings-858487c485-72d4d     2/2     Running   0          21s
 > order-v1-6f84964467-qvc4k      2/2     Running   0          21s
 > sleep-6c7c95d6c-5r4gq          2/2     Running   0          20s
