@@ -1,35 +1,31 @@
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: backend-api
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend-api
+  name: follow-v1
   labels:
-    app: backend-api
+    app: follow
+    version: v1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: backend-api
+      app: follow
       version: v1
   template:
     metadata:
       labels:
-        app: backend-api
+        app: follow
         version: v1
     spec:
-      serviceAccountName: backend-api
+      serviceAccountName: mock-follow
       containers:
-      - name: backend-api
+      - name: follow
         image: nicholasjackson/fake-service:v0.24.2
         imagePullPolicy: Always
         readinessProbe:
           httpGet:
             path: /health
-            port: 8080
+            port: 9080
         resources:
           requests:
             memory: "60Mi"
@@ -41,35 +37,44 @@ spec:
             # ephemeral-storage: "0Mi" # lab cannot
         securityContext:
           allowPrivilegeEscalation: false
-          # runAsUser: 10001
+          runAsUser: 10001
           # runAsGroup: 10001
           # runAsNonRoot: true
           # readOnlyRootFilesystem: true
         ports:
-        - containerPort: 8080
+        - containerPort: 9080
         env:
         - name: "LISTEN_ADDR"
-          value: "0.0.0.0:8080"
+          value: "0.0.0.0:9080"
         - name: "UPSTREAM_URIS"
-          value: "http://greetings:8080"
+          value: "http://greetings:9080"
         - name: "NAME"
-          value: "backend-api"
+          value: "follow"
         - name: "MESSAGE"
           value: "----> API"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend-api
+  name: follow
+  labels:
+    app: follow
+    service: follow
 spec:
   selector:
-    app: backend-api
+    app: follow
   ports:
   - name: http
     protocol: TCP
-    port: 8080
-    targetPort: 8080
+    port: 9080
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mock-follow
+  labels:
+    account: follow
+
 # apiVersion: networking.k8s.io/v1
 # kind: NetworkPolicy
 # metadata:
@@ -77,7 +82,7 @@ spec:
 # spec:
 #   podSelector:
 #     matchLabels:
-#       app: backend-api
+#       app: follow
 #   policyTypes:
 #   - Ingress
 #   - Egress
