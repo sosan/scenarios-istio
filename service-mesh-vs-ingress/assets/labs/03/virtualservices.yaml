@@ -49,9 +49,28 @@ spec:
   http:
   - match:
     - uri:
-        exact: /follow
+        exact: /productpage
+    - uri:
+        prefix: /static
+    - uri:
+        exact: /login
+    - uri:
+        exact: /logout
+    - uri:
+        prefix: /api/v1/products
     route:
     - destination:
         host: follow
         port:
           number: 9080
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: follow
+spec:
+  host: follow
+  subsets:
+  - name: v1
+    labels:
+      version: v1
