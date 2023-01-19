@@ -50,7 +50,7 @@ To work around this issue, you can use the "port-forward" command to forward the
 kubectl port-forward -n istio-system svc/istio-ingressgateway 8081:80 >> /dev/null &
 ```{{exec}}
 
-kubectl port-forward -n istio-ingress virtualservices/backend-api-app 8081:80 &
+kubectl port-forward -n istio-ingress virtualservices/follow-app 8081:80 &
 
 ```plain
 lsof -i :8081
