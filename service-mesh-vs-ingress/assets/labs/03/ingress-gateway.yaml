@@ -4,33 +4,14 @@ metadata:
   name: mock-apps-gateway
 spec:
   selector:
-    istio: istio-ingressgateway2 #istio-ingressgateway #ingressgateway
+    istio: ingressgateway #istio-ingressgateway #ingressgateway
   servers:
   - port:
       name: http
-      number: 8123
+      number: 80
       protocol: HTTP
     hosts:
     - "*"
----
-apiVersion: networking.istio.io/v1alpha3
-kind: VirtualService
-metadata:
-  name: backend-api-app
-spec:
-  hosts:
-  - "backend-api.istio-lab-01.svc.cluster.local"
-  gateways:
-  - istio-ingress/mock-apps-gateway # <namespace>/<name> format
-  http:
-  - match:
-    - uri:
-        exact: /
-    route:
-    - destination:
-        host: backend-api
-        port:
-          number: 8080
 
 # apiVersion: networking.istio.io/v1alpha3
 # kind: Gateway
