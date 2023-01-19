@@ -1,0 +1,44 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: follow
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - mock-apps-gateway
+  http:
+  - match:
+    - uri:
+        exact: /follow
+    route:
+    - destination:
+        host: follow
+        port:
+          number: 9080
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: greetings
+spec:
+  hosts:
+  - greetings
+  http:
+    route:
+    - destination:
+        host: greetings
+        subset: v1
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: order
+spec:
+  hosts:
+  - order
+  http:
+    route:
+    - destination:
+        host: order
+        subset: v1
