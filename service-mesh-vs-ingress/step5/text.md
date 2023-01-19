@@ -133,8 +133,8 @@ lsof -i :8081
 A VirtualService defines a set of traffic routing rules to apply when a host is addressed. It allows you to route traffic to different versions of a service or to different services based on certain conditions. This API endpoint allows you to create, read, update, and delete VirtualServices in an Istio service mesh.
 
 ```plain
-kubectl apply -f labs/03/ingress-gateway.yaml -n istio-labs-01
-kubectl apply -f labs/03/virtualservices.yaml -n istio-labs-01
+kubectl apply -f labs/03/ingress-gateway.yaml -n istio-lab-01
+kubectl apply -f labs/03/virtualservices.yaml -n istio-lab-01
 ```{{exec}}
 
 
