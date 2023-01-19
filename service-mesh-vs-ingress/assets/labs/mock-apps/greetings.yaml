@@ -1,14 +1,10 @@
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: greetings
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: greetings
   labels:
     app: greetings
+    version: v1
 spec:
   replicas: 1
   selector:
@@ -21,7 +17,7 @@ spec:
         app: greetings
         version: v1
     spec:
-      serviceAccountName: greetings    
+      serviceAccountName: mock-greetings
       containers:
       - name: greetings
         image: nicholasjackson/fake-service:v0.24.2
@@ -29,7 +25,7 @@ spec:
         readinessProbe:
           httpGet:
             path: /health
-            port: 8080
+            port: 9080
         resources:
           requests:
             memory: "60Mi"
@@ -41,32 +37,40 @@ spec:
             # ephemeral-storage: "0Mi" # lab cannot
         securityContext:
           allowPrivilegeEscalation: false
-          # runAsUser: 10001
+          runAsUser: 10001
           # runAsGroup: 10001
           # runAsNonRoot: true
           # readOnlyRootFilesystem: true
         ports:
-        - containerPort: 8080
+        - containerPort: 9080
         env:
         - name: "LISTEN_ADDR"
-          value: "0.0.0.0:8080"
+          value: "0.0.0.0:9080"
         - name: "UPSTREAM_URIS"
-          value: "http://order:8080"
+          value: "http://order:9080"
         - name: "NAME"
           value: "greetings"
         - name: "MESSAGE"
           value: "---> Greetings!"
-
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: greetings
+  labels:
+    app: greetings
+    service: greetings
 spec:
   selector:
     app: greetings
   ports:
   - name: http
     protocol: TCP
-    port: 8080
-    targetPort: 8080
+    port: 9080
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mock-greetings
+  labels:
+    account: greetings
