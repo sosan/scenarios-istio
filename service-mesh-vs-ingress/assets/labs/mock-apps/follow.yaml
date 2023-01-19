@@ -51,7 +51,7 @@ spec:
         - name: "NAME"
           value: "follow"
         - name: "MESSAGE"
-          value: "----> API"
+          value: "---- BEGIN API -----"
 ---
 apiVersion: v1
 kind: Service

@@ -51,7 +51,7 @@ spec:
         - name: "NAME"
           value: "greetings"
         - name: "MESSAGE"
-          value: "---> Greetings!"
+          value: "--- GREEETINGS HERE ---"
 ---
 apiVersion: v1
 kind: Service

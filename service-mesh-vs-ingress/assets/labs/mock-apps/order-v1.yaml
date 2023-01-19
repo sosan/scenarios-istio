@@ -51,7 +51,7 @@ spec:
         - name: "SERVER_TYPE"
           value: "http"
         - name: "MESSAGE"
-          value: "----> Order v1"
+          value: "---- ORDER V1 HERE ----"
 ---
 apiVersion: v1
 kind: Service
