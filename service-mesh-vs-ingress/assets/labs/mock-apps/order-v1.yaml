@@ -20,7 +20,8 @@ spec:
       serviceAccountName: mock-order    
       containers:
       - name: order
-        image: nicholasjackson/fake-service:v0.24.2
+        # image: nicholasjackson/fake-service:v0.24.2
+        image: docker.io/istio/examples-bookinfo-details-v1:1.17.0
         imagePullPolicy: Always
         readinessProbe:
           httpGet:
