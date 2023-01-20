@@ -199,10 +199,10 @@ kubectl label namespace istio-lab-01 istio-injection=enabled
 Let's run some mock `nicholasjackson/fake-service` apps:
 
 ```plain
-kubectl apply -n istio-lab-01 -f ./labs/mock-apps/follow.yaml
-kubectl apply -n istio-lab-01 -f ./labs/mock-apps/greetings.yaml
-kubectl apply -n istio-lab-01 -f ./labs/mock-apps/order-v1.yaml
-kubectl apply -n istio-lab-01 -f ./labs/mock-apps/sleep.yaml
+kubectl apply -n istio-lab-01 -f ./labs/mock-apps-v1/follow.yaml
+kubectl apply -n istio-lab-01 -f ./labs/mock-apps-v1/greetings.yaml
+kubectl apply -n istio-lab-01 -f ./labs/mock-apps-v1/order-v1.yaml
+kubectl apply -n istio-lab-01 -f ./labs/mock-apps-v1/sleep.yaml
 kubectl wait --for=condition=Ready pod --all -n istio-lab-01
 ```{{exec}}
 

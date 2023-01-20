@@ -37,7 +37,8 @@
         {"file": "wait-background.sh", "target": "/ks", "chmod": "+x"},
         {"file": "demo.yaml", "target": "/tmp", "chmod": "+x"},
         {"file": "labs/**/*.*", "target": "/root"},
-        {"file": "mock-apps/*.*", "target": "/root"}
+        {"file": "mock-apps-v1/*.*", "target": "/root"},
+        {"file": "mock-apps-v2/*.*", "target": "/root"}
       ]
     }
   },
