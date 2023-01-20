@@ -17,12 +17,26 @@ metadata:
   name: greetings
 spec:
   hosts:
-  - greetings
+  - "*"
+  gateways:
+  - mock-apps-gateway
   http:
+  - match:
+    - uri:
+        exact: /productpage
+    - uri:
+        prefix: /static
+    - uri:
+        exact: /login
+    - uri:
+        exact: /logout
+    - uri:
+        prefix: /api/v1/products
     route:
     - destination:
         host: greetings
-        subset: v1
+        port:
+          number: 9080
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
