@@ -99,31 +99,17 @@ kubectl get service -A -l istio=ingressgateway
 
 As we previously mentioned, if we don't have a **MetalLB** environment or a **Managed Kubernetes**, `external-ip` will remain in the <pending> state.
 
-To solve this issue, we can use the port-forward command to manually route traffic towards the ingress gateway.
+        <!--
+        To solve this issue, we can use the port-forward command to manually route traffic towards the ingress gateway.
+        ## Two possibilities:
 
-## Two possibilities:
+        - If we obtain an external IP, we will continue with...
+        - If we do not obtain an external IP, we will proceed to... 
 
-- If we obtain an external IP, we will continue with...
-- If we do not obtain an external IP, we will proceed to...
+        In a managed Kubernetes cluster or with MetalLB, the cloud provider or MetalLB will assign a static IP to the load balancer for routing traffic to the gateway.  
 
-We will focus on the loadbalancer in the namespace within `istio-ingress`:
-
-```plain
-kubectl get service -n istio-ingress
-```{{exec}}
-
-In a managed Kubernetes cluster or with MetalLB, the cloud provider or MetalLB will assign a static IP to the load balancer for routing traffic to the gateway. 
-
-To resolve this issue, you can use the "port-forward" command to forward the ingress gateway.
-
-```plain
-kubectl port-forward -n istio-system svc/istio-ingressgateway 8081:80 >> /dev/null &
-```{{exec}}
-
-```plain
-lsof -i :8081
-```{{exec}}
-
+        To resolve this issue, we can use the "port-forward".
+        -->
 
 A VirtualService defines a set of traffic routing rules to apply when a host is addressed. It allows you to route traffic to different versions of a service or to different services based on certain conditions. This API endpoint allows you to create, read, update, and delete VirtualServices in an Istio service mesh.
 
@@ -136,7 +122,11 @@ kubectl apply -f labs/03/virtualservices.yaml -n istio-lab-01
 kubectl port-forward -n istio-ingress svc/new-ingressgateway 1234:80 >> /dev/null &
 ```{{exec}}
 
+Let's check if port 8081 has been opened:
 
+```plain
+lsof -i :8081
+```{{exec}}
 
 kubectl get gateway -A
 
