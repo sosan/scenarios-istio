@@ -17,7 +17,7 @@ Please note that this is a simple example, and in reality the routing decision m
 
 The Istio ingress gateway is a specialized proxy that sits at the edge of the mesh and controls access to the services within the cluster from the public network.
 
-It is exposed by a Kubernetes Service of type LoadBalancer, which can be query default using:
+It is exposed by a Kubernetes Service of type **LoadBalancer**, which can be query default using:
 
 ```plain
 kubectl get svc -n istio-system --selector istio=ingressgateway
@@ -28,11 +28,9 @@ kubectl get svc -n istio-system --selector istio=ingressgateway
 > istio-ingressgateway   LoadBalancer   10.98.230.210   <pending>     15021:32255/TCP,80:31165/TCP,443:32507/TCP,31400:30603/TCP,15443:31674/TCP   10m
 > ```
 
-When using `kind`, the external IP address of the Istio ingress gateway will not be assigned a static IP address, it will be in a `Pending` state.
-
-The `Loadbalancer` service created: 
-- if we are in a **Kubernetes managed** or a **MetalLB** environment, both will assign an IP to that loadbalancer. 
-- Otherwise, it will not be possible to assign an IP and its status will remain `pending`.
+The `Loadbalancer` service: 
+- if we are in a **Kubernetes managed** or a **MetalLB** environment, both will assign an IP to `EXTERNAL-IP`. 
+- Otherwise, it will not be possible to assign an external IP and its status will remain `pending`.
 
 To work around this issue, you can use the "port-forward" command:
 
@@ -68,6 +66,33 @@ curl -v localhost:8081
 
 ## Allow incoming traffic to the gateway
 
+To enable traffic to a gateway, we will need to create:
+- `Gateway` resource (created) ✅
+- `VirtualService` resource
+
+The VirtualService resource defines the routing rules for incoming traffic. Once these resources are created and configured, traffic should be able to reach the gateway.
+
+```plain
+kubectl apply -f labs/03/virtualservices.yaml -n istio-lab-01
+```{{exec}}
+
+
+```plain
+kubectl port-forward -n istio-system svc/istio-ingressgateway 8081:80 >> /dev/null &
+```{{exec}}
+
+```plain
+curl -v localhost:8081
+```{{exec}}
+
+> Result
+> ```plain
+> ddd
+> ```
+
+
+## Creating new gateway
+
 A service mesh can have multiple ingress gateways. This is typically used in multi-tenant environments. 
 
 In this case, we will installing new istio ingress gateway in namespace `istio-ingress` separate for increased security and isolation.
@@ -98,18 +123,6 @@ kubectl get service -A -l istio=ingressgateway
 > ```
 
 As we previously mentioned, if we don't have a **MetalLB** environment or a **Managed Kubernetes**, `external-ip` will remain in the <pending> state.
-
-        <!--
-        To solve this issue, we can use the port-forward command to manually route traffic towards the ingress gateway.
-        ## Two possibilities:
-
-        - If we obtain an external IP, we will continue with...
-        - If we do not obtain an external IP, we will proceed to... 
-
-        In a managed Kubernetes cluster or with MetalLB, the cloud provider or MetalLB will assign a static IP to the load balancer for routing traffic to the gateway.  
-
-        To resolve this issue, we can use the "port-forward".
-        -->
 
 A VirtualService defines a set of traffic routing rules to apply when a host is addressed. It allows you to route traffic to different versions of a service or to different services based on certain conditions. This API endpoint allows you to create, read, update, and delete VirtualServices in an Istio service mesh.
 
