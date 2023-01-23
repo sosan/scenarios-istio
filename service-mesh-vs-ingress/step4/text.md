@@ -183,6 +183,8 @@ To add the Istio sidecar to the `httpbin` service in the namespace `istio-lab-01
 
 ```plain
 istioctl kube-inject -f ./labs/02/httpbin.yaml --meshConfigMapName istio --injectConfigMapName istio-sidecar-injector  | kubectl -n istio-lab-01 apply -f -
+## WAITING ...
+kubectl wait --for=condition=Ready pod --all --timeout=1h -n istio-lab-01
 ```{{exec}}
 
 After executing these commands, it is a good idea to verify the pods running in the `istio-lab-01` namespace:
@@ -217,7 +219,8 @@ kubectl apply -n istio-lab-01 -f ./labs/mock-apps-v1/follow.yaml
 kubectl apply -n istio-lab-01 -f ./labs/mock-apps-v1/greetings.yaml
 kubectl apply -n istio-lab-01 -f ./labs/mock-apps-v1/order-v1.yaml
 kubectl apply -n istio-lab-01 -f ./labs/mock-apps-v1/sleep.yaml
-kubectl wait --for=condition=Ready pod --all -n istio-lab-01
+## WAITING ...
+kubectl wait --for=condition=Ready pod --all -n istio-lab-01 --timeout=1h
 ```{{exec}}
 
 > ```plain
