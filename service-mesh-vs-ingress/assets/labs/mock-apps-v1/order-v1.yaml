@@ -37,7 +37,7 @@ spec:
             # ephemeral-storage: "0Mi" # lab cannot
         securityContext:
           allowPrivilegeEscalation: false
-          runAsUser: 10001
+          # runAsUser: 10001
           # runAsGroup: 10001
           # runAsNonRoot: true
           # readOnlyRootFilesystem: true
