@@ -120,6 +120,8 @@ kubectl -n istio-system get configmap
 > kube-root-ca.crt                      1      11m
 > ```
 
+**GENERAL COMMAND EXPLAINED**
+
 ```plain
 istioctl kube-inject -f ./labs/02/httpbin.yaml \
 --meshConfigMapName istio \
@@ -127,6 +129,16 @@ istioctl kube-inject -f ./labs/02/httpbin.yaml \
  | kubectl -n istio-lab-01 
 ```
 
+Explanation above command:
+- `istioctl kube-inject`. This command is used to inject an Istio sidecar proxy into a Kubernetes deployment manifest.
+- `-f ./labs/02/httpbin.yaml`. This flag specifies the path to the deployment manifest file to be injected. In this case, the file is located at ./labs/02/httpbin.yaml.
+- `--meshConfigMapName istio`. This flag specifies the name of the Istio Mesh ConfigMap to use. In this case, the name is istio.
+- `--injectConfigMapName istio-sidecar-injector`. This flag specifies the name of the Istio Injector ConfigMap to use. In this case, the name is istio-sidecar-injector.
+- `| kubectl -n istio-lab-01`. This part of the command pipes the output of the istioctl kube-inject command to kubectl, which is used to apply the modified deployment manifest to the Kubernetes cluster. The -n flag specifies the namespace to apply the manifest to, which in this case is istio-lab-01.
+
+
+
+<!-- 
 Explanation above command:
 ```plain
 istioctl kube-inject
@@ -151,18 +163,20 @@ This flag specifies the name of the Istio Injector ConfigMap to use. In this cas
 ```plain
 | kubectl -n istio-lab-01
 ```
-This part of the command pipes the output of the istioctl kube-inject command to kubectl, which is used to apply the modified deployment manifest to the Kubernetes cluster. The -n flag specifies the namespace to apply the manifest to, which in this case is istio-lab-01.
+This part of the command pipes the output of the istioctl kube-inject command to kubectl, which is used to apply the modified deployment manifest to the Kubernetes cluster. The -n flag specifies the namespace to apply the manifest to, which in this case is istio-lab-01. -->
 
 A more detailed explanation:
 
-> - **MAIN INSTRUCTION AND YAML DEPLOY SERVICE CONFIG**
->   - istioctl kube-inject -f ./labs/02/httpbin.yaml
-> 
+> - **istioctl kube-inject -f ./labs/02/httpbin.yaml** is the main instruction and yaml deploy service config
+> - **--meshConfigMapName istio** is a Kubernetes ConfigMap that stores the Istio mesh-wide configuration. This is used to control the behavior of the Istio service mesh, and can be used to set various options such as the default outbound/inbound traffic policy
+> - **--injectConfigMapName istio-sidecar-injector** is a Kubernetes ConfigMap that stores the configuration for the Istio sidecar injector. The sidecar injector is a tool that automatically injects an Istio sidecar proxy into the pods. This can be used to control the behavior of the sidecar injector, such as which namespaces to inject the sidecar into and which labels to use to determine which pods should be injected.
+
+<!-- 
 > - **MESH CONFIG MAP NAME** is a Kubernetes ConfigMap that stores the Istio mesh-wide configuration. This is used to control the behavior of the Istio service mesh, and can be used to set various options such as the default outbound/inbound traffic policy:
 >   - --meshConfigMapName istio
 > 
 > - **INJECTOR CONFIG MAP NAME** is a Kubernetes ConfigMap that stores the configuration for the Istio sidecar injector. The sidecar injector is a tool that automatically injects an Istio sidecar proxy into the pods. This can be used to control the behavior of the sidecar injector, such as which namespaces to inject the sidecar into and which labels to use to determine which pods should be injected.
->   - --injectConfigMapName istio-sidecar-injector
+>   - --injectConfigMapName istio-sidecar-injector -->
 
 
 To add the Istio sidecar to the `httpbin` service in the namespace `istio-lab-01`, run the following command:
