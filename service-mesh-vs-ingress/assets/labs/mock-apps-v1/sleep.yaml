@@ -72,12 +72,12 @@ spec:
           # runAsGroup: 10001
           # runAsNonRoot: true
           # readOnlyRootFilesystem: true
-        volumeMounts:
-        - mountPath: /etc/sleep/tls
-          name: secret-volume
-      volumes:
-      - name: secret-volume
-        secret:
-          secretName: sleep-secret
-          optional: true
+        # volumeMounts:
+        # - mountPath: /etc/sleep/tls
+        #   name: secret-volume
+      # volumes:
+      # - name: secret-volume
+      #   secret:
+      #     secretName: sleep-secret
+      #     optional: true
 ---
