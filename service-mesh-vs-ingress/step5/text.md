@@ -28,7 +28,7 @@ kubectl get svc -n istio-system --selector istio=ingressgateway
 > istio-ingressgateway   LoadBalancer   10.98.230.210   <pending>     15021:32255/TCP,80:31165/TCP,443:32507/TCP,31400:30603/TCP,15443:31674/TCP   10m
 > ```
 
-The `Loadbalancer` service: 
+This `Loadbalancer` service: 
 - if we are in a **Kubernetes managed** or a **MetalLB** environment, both will assign an IP to `EXTERNAL-IP`. 
 - Otherwise, it will not be possible to assign an external IP and its status will remain `pending`.
 
@@ -59,7 +59,7 @@ curl -v localhost:8081
 
 > Result:
 > ```plain
-> 50661 portforward.go:406] an error occurred forwarding 8081 -> 8080: error forwarding port 8080
+> an error occurred forwarding 8081 -> 8080: error forwarding port 8080
 > ```
 
 **As we expected, the gateway has responded with an error.**
@@ -117,28 +117,33 @@ kubectl get service -A -l istio=ingressgateway
 
 > Result:
 > ```plain
-> NAMESPACE       NAME                   TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                                                                   
-> istio-ingress   istio-ingressgateway   LoadBalancer   10.96.178.175   <pending>     15021:30304/TCP,80:30507/TCP,443:31811/TCP                                
-> istio-system    istio-ingressgateway   LoadBalancer   10.101.85.163   <pending>     15021:30449/TCP,80:31252/TCP,443:30696/TCP,31400:31143/TCP,15443:31990/TCP
+> NAMESPACE       NAME                   TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                                                                      AGE
+> istio-ingress   new-ingressgateway     LoadBalancer   10.108.227.19   <pending>     15021:30854/TCP,80:30082/TCP,443:32662/TCP                                   10s
+> istio-system    istio-ingressgateway   LoadBalancer   10.102.40.230   <pending>     15021:31499/TCP,80:31783/TCP,443:32579/TCP,31400:31224/TCP,15443:31626/TCP   21m
 > ```
 
-As we previously mentioned, if we don't have a **MetalLB** environment or a **Managed Kubernetes**, `external-ip` will remain in the <pending> state.
+As we previously mentioned, if we don't have a **MetalLB** environment or a **Managed Kubernetes**, `EXTERNAL-IP` will remain in the <pending> state.
 
 A VirtualService defines a set of traffic routing rules to apply when a host is addressed. It allows you to route traffic to different versions of a service or to different services based on certain conditions. This API endpoint allows you to create, read, update, and delete VirtualServices in an Istio service mesh.
 
 ```plain
 kubectl apply -f labs/03/ingress-gateway.yaml -n istio-lab-01
-kubectl apply -f labs/03/virtualservices.yaml -n istio-lab-01
+kubectl apply -f labs/03/virtualservices-for-mock-apps-gateway.yaml -n istio-lab-01
 ```{{exec}}
 
 ```plain
 kubectl port-forward -n istio-ingress svc/new-ingressgateway 1234:80 >> /dev/null &
 ```{{exec}}
 
-Let's check if port 8081 has been opened:
+Let's check if port 1234 has been opened:
 
 ```plain
-lsof -i :8081
+lsof -i :1234
+```{{exec}}
+
+
+```plain
+curl -v localhost:1234/follow
 ```{{exec}}
 
 kubectl get gateway -A
