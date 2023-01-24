@@ -128,11 +128,11 @@ kubectl get service -A -l istio=ingressgateway
 
 As we previously mentioned, if we don't have a **MetalLB** environment or a **Managed Kubernetes**, `EXTERNAL-IP` will remain in the <pending> state.
 
-We verify that we have correctly installed and raised the gateway
+We verify that we have correctly installed and raised the gateway:
 
 ```plain
 kubectl get gateway -n istio-lab-01
-```
+```{{exec}}
 
 > Result
 > ```plain
@@ -150,6 +150,19 @@ It allows you to route traffic to different versions of a service or to differen
 kubectl apply -f labs/03/virtualservices-for-mock-apps-gateway.yaml -n istio-lab-01
 ```{{exec}}
 
+We will check if created correctly:
+```plain
+kubectl get virtualservices -n istio-lab-01 
+```{{exec}}
+
+> Result:
+> ```plain
+> NAME        GATEWAYS                HOSTS   AGE
+> follow      ["mock-apps-gateway"]   ["*"]   25s
+> greetings   ["mock-apps-gateway"]   ["*"]   25s
+> order       ["mock-apps-gateway"]   ["*"]   25s
+> ```
+
 ```plain
 kubectl port-forward -n istio-ingress svc/istio-ingressgateway 1234:80 >> /dev/null &
 ```{{exec}}
@@ -165,7 +178,8 @@ lsof -i :1234
 curl -v localhost:1234/api/v1/follow
 ```{{exec}}
 
-
+Status code 200 from
+`Follow` -> `Greetings` -> `Order`
 
 > Result: status code 200
 > ```plain
@@ -190,23 +204,22 @@ curl -v localhost:1234/api/v1/follow
 > }
 > ```
 
-Status code 200 from
-`Follow service` -> `Greetings service` -> Order
 
-Send curl direct to `Greetings service`
+
+Send curl direct to `Greetings` -> `Order`
 
 ```plain
 curl -v localhost:1234/api/v1/greetings
 ```{{exec}}
 
-Send curl direct to `Order service`
+Send curl direct to `Order`
 
 ```plain
 curl -v localhost:1234/api/v1/orders
 ```{{exec}}
 
 
-
+<!-- 
 kubectl get gateway -A
 
 kubectl get service -A -l istio=ingressgateway
@@ -225,7 +238,7 @@ GATEWAY_IP=$(kubectl get svc \
     -n istio-ingress mock-apps-gateway \
     -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
 ```{{exec}}
-
+ -->
 
 
 
