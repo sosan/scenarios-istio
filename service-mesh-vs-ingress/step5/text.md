@@ -94,7 +94,7 @@ curl -v localhost:8081/api/v1/follow
 -->
 
 
-## Creating new gateway
+### Creating new gateway
 
 A service mesh can have multiple ingress gateways. This is typically used in multi-tenant environments. 
 
@@ -103,6 +103,7 @@ In this case, we will installing new istio ingress gateway in namespace `istio-i
 ```plain
 kubectl create namespace istio-ingress
 istioctl install -y -n istio-ingress -f ./labs/03/istio-install-gateway.yaml
+kubectl apply -f labs/03/ingress-gateway.yaml -n istio-lab-01
 ```{{exec}}
 
 Result:
@@ -127,14 +128,25 @@ kubectl get service -A -l istio=ingressgateway
 
 As we previously mentioned, if we don't have a **MetalLB** environment or a **Managed Kubernetes**, `EXTERNAL-IP` will remain in the <pending> state.
 
-## Creating VirtualServices
+We verify that we have correctly installed and raised the gateway
+
+```plain
+kubectl get gateway -n istio-lab-01
+```
+
+> Result
+> ```plain
+> NAMESPACE      NAME                AGE
+> istio-lab-01   mock-apps-gateway   15s
+> ```
+
+### Creating VirtualServices
 
 A VirtualService defines a set of traffic routing rules to apply when a host is addressed.
 
 It allows you to route traffic to different versions of a service or to different services based on certain conditions.
 
 ```plain
-kubectl apply -f labs/03/ingress-gateway.yaml -n istio-lab-01
 kubectl apply -f labs/03/virtualservices-for-mock-apps-gateway.yaml -n istio-lab-01
 ```{{exec}}
 
@@ -152,6 +164,48 @@ lsof -i :1234
 ```plain
 curl -v localhost:1234/api/v1/follow
 ```{{exec}}
+
+
+
+> Result: status code 200
+> ```plain
+> {
+>   [...]
+>   "body": "---- BEGIN API -----",
+>   "upstream_calls": {
+>     "http://greetings:9080": {
+>       "body": "--- GREEETINGS HERE ---",
+>       [...]
+>       "upstream_calls": {
+>         "http://order:9080": {
+>           [...]
+>           "body": "---- ORDER V1 HERE ----",
+>           "code": 200
+>         }
+>       },
+>       "code": 200
+>     }
+>   },
+>   "code": 200
+> }
+> ```
+
+Status code 200 from
+`Follow service` -> `Greetings service` -> Order
+
+Send curl direct to `Greetings service`
+
+```plain
+curl -v localhost:1234/api/v1/greetings
+```{{exec}}
+
+Send curl direct to `Order service`
+
+```plain
+curl -v localhost:1234/api/v1/orders
+```{{exec}}
+
+
 
 kubectl get gateway -A
 
