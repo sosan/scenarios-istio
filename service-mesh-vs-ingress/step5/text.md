@@ -67,13 +67,15 @@ curl -v localhost:8081
 ## Allow incoming traffic to the gateway
 
 To enable traffic to a gateway, we will need to create:
-- `Gateway` resource (created) ✅
+- `Gateway` resource
 - `VirtualService` resource
 
-The VirtualService resource defines the routing rules for incoming traffic. Once these resources are created and configured, traffic should be able to reach the gateway.
+Once these resources are created and configured, traffic should be able to reach the gateway.
 
+
+<!-- 
 ```plain
-kubectl apply -f labs/03/virtualservices.yaml -n istio-lab-01
+kubectl apply -f labs/03/virtualservices-for-default.yaml -n istio-lab-01
 ```{{exec}}
 
 
@@ -82,13 +84,14 @@ kubectl port-forward -n istio-system svc/istio-ingressgateway 8081:80 >> /dev/nu
 ```{{exec}}
 
 ```plain
-curl -v localhost:8081
+curl -v localhost:8081/api/v1/follow
 ```{{exec}}
-
+ ✅
 > Result
 > ```plain
 > ddd
-> ```
+> ``` 
+-->
 
 
 ## Creating new gateway
@@ -118,13 +121,17 @@ kubectl get service -A -l istio=ingressgateway
 > Result:
 > ```plain
 > NAMESPACE       NAME                   TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                                                                      AGE
-> istio-ingress   new-ingressgateway     LoadBalancer   10.108.227.19   <pending>     15021:30854/TCP,80:30082/TCP,443:32662/TCP                                   10s
+> istio-ingress   istio-ingressgateway   LoadBalancer   10.108.227.19   <pending>     15021:30854/TCP,80:30082/TCP,443:32662/TCP                                   10s
 > istio-system    istio-ingressgateway   LoadBalancer   10.102.40.230   <pending>     15021:31499/TCP,80:31783/TCP,443:32579/TCP,31400:31224/TCP,15443:31626/TCP   21m
 > ```
 
 As we previously mentioned, if we don't have a **MetalLB** environment or a **Managed Kubernetes**, `EXTERNAL-IP` will remain in the <pending> state.
 
-A VirtualService defines a set of traffic routing rules to apply when a host is addressed. It allows you to route traffic to different versions of a service or to different services based on certain conditions. This API endpoint allows you to create, read, update, and delete VirtualServices in an Istio service mesh.
+## Creating VirtualServices
+
+A VirtualService defines a set of traffic routing rules to apply when a host is addressed.
+
+It allows you to route traffic to different versions of a service or to different services based on certain conditions.
 
 ```plain
 kubectl apply -f labs/03/ingress-gateway.yaml -n istio-lab-01
@@ -132,7 +139,7 @@ kubectl apply -f labs/03/virtualservices-for-mock-apps-gateway.yaml -n istio-lab
 ```{{exec}}
 
 ```plain
-kubectl port-forward -n istio-ingress svc/new-ingressgateway 1234:80 >> /dev/null &
+kubectl port-forward -n istio-ingress svc/istio-ingressgateway 1234:80 >> /dev/null &
 ```{{exec}}
 
 Let's check if port 1234 has been opened:
@@ -143,7 +150,7 @@ lsof -i :1234
 
 
 ```plain
-curl -v localhost:1234/follow
+curl -v localhost:1234/api/v1/follow
 ```{{exec}}
 
 kubectl get gateway -A
