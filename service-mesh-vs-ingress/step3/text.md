@@ -139,7 +139,7 @@ Update the configuration of deployment `envoy` in the `envoy-lab-01` namespace a
 ```plain
 kubectl create configmap envoy --from-file=envoy.yaml=./labs/01/config/envoy_config_timeout.yaml -o yaml --dry-run=client | kubectl apply -f - -n envoy-lab-01
 kubectl rollout restart deploy/envoy -n envoy-lab-01
-sleep 20
+kubectl wait --for=condition=Ready pod --all --timeout=1h -n envoy-lab-01
 ```{{exec}}
 
 This curl command to `http://envoy/headers` URL is utilized to transmit an HTTP request to HTTPBin service throught Envoy:
