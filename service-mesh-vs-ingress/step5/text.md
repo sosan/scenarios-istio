@@ -163,6 +163,33 @@ kubectl get virtualservices -n istio-lab-01
 > order       ["mock-apps-gateway"]   ["*"]   25s
 > ```
 
+---
+
+To recap, we have active services of:
+- `Gateway` ✅
+- `Virtualservices` ✅
+
+We can query the gateway configuration using the `istioctl proxy-config` command:
+
+```plain
+istioctl proxy-config routes deploy/istio-ingressgateway.istio-ingress
+```
+
+> Result
+```plain
+
+```
+
+If we wanted to see an individual route, we can ask for its output as `json` like this:
+
+```plain
+istioctl proxy-config routes deploy/istio-ingressgateway.istio-ingress --name http.80 -o json
+```
+
+---
+---
+
+
 ```plain
 kubectl port-forward -n istio-ingress svc/istio-ingressgateway 1234:80 >> /dev/null &
 ```{{exec}}
@@ -219,33 +246,70 @@ curl -v localhost:1234/api/v1/orders
 ```{{exec}}
 
 
-<!-- 
-kubectl get gateway -A
 
-kubectl get service -A -l istio=ingressgateway
+## Ingress traffic with certification HTTPS
 
-kubectl get gateways.networking.istio.io mock-apps-gateway -n istio-ingress  -o jsonpath='{.status.addresses[*].value}'
-kubectl get service -n istio-ingress istio-ingressgateway   -o jsonpath='{.status.addresses[*].value}'
-
-
-kubectl get virtualservices -n istio-labs-01
-
-kubectl get gateway -A
-
+We will create a certificate with an appropriate SAN
 
 ```plain
-GATEWAY_IP=$(kubectl get svc \
-    -n istio-ingress mock-apps-gateway \
-    -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
-```{{exec}}
- -->
+kubectl create -n istio-ingress \
+    secret tls gw-istioingress-cert \
+    --key ./labs/03/certs/key.pem \
+    --cert ./labs/03/certs/cert.pem
+```
+
+_the cert must be where the gateway is actually deployed_
+
+```plain
+kubectl -n istioinaction apply -f labs/03/https-gateway.yaml
+```
 
 
+Example calling it:
+
+```
+curl --cacert ./labs/04/certs/ca/root-ca.crt https://localhost --resolve localhost:443:$GATEWAY_IP
+```
 
 
+## Istio Ingress Ingress Gateway traffic with Cert Manager
 
+In this lab, the CA will be our own CA but cert-manager can be integrated with a lot of backend PKI --- which is a big reason why cert manager is so popular. 
 
+Preparation for installation of cert manager:
 
+```plain
+kubectl create namespace cert-manager
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+```
+
+```plain
+helm install cert-manager jetstack/cert-manager \
+    --namespace cert-manager \
+    --version v1.2.0 \
+    --create-namespace \
+    --set installCRDs=true
+kubectl wait --for=condition=Ready pod --all -n cert-manager
+```
+
+```plain
+kubectl get po -n cert-manager
+```
+
+> Result:
+> ```plain
+> 
+> ```
+
+Install certs, better resolution LetsEncrypt, Vault:
+
+```plain
+kubectl create -n cert-manager \
+    secret tls manager-cacerts \
+    --cert ./labs/03/certs/ca/root-ca.crt \
+    --key ./labs/03/certs/ca/root-ca.key
+```
 
 
 
