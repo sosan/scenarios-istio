@@ -172,18 +172,23 @@ To recap, we have active services of:
 We can query the gateway configuration using the `istioctl proxy-config` command:
 
 ```plain
-istioctl proxy-config routes deploy/istio-ingressgateway.istio-ingress
+istioctl proxy-config routes deploy/istio-ingressgateway.istio-ingress -n istio-ingress
 ```
 
 > Result
-```plain
-
-```
+> ```plain
+> NAME          DOMAINS     MATCH                  VIRTUAL SERVICE
+> http.8080     *           /api/v1/follow*        follow.istio-lab-01
+> http.8080     *           /api/v1/greetings*     greetings.istio-lab-01
+> http.8080     *           /api/v1/orders*        order.istio-lab-01
+>               *           /healthz/ready*        
+>               *           /stats/prometheus*     
+> ```
 
 If we wanted to see an individual route, we can ask for its output as `json` like this:
 
 ```plain
-istioctl proxy-config routes deploy/istio-ingressgateway.istio-ingress --name http.80 -o json
+istioctl proxy-config routes deploy/istio-ingressgateway.istio-ingress -n istio-ingress -o json | jq
 ```
 
 ---
@@ -254,8 +259,8 @@ We will create a certificate with an appropriate SAN
 ```plain
 kubectl create -n istio-ingress \
     secret tls gw-istioingress-cert \
-    --key ./labs/03/certs/key.pem \
-    --cert ./labs/03/certs/cert.pem
+    --key ./labs/03/certs/key.key \
+    --cert ./labs/03/certs/cert.crt
 ```
 
 _the cert must be where the gateway is actually deployed_
@@ -281,26 +286,30 @@ Preparation for installation of cert manager:
 ```plain
 kubectl create namespace cert-manager
 helm repo add jetstack https://charts.jetstack.io
-helm repo update
 ```
 
 ```plain
-helm install cert-manager jetstack/cert-manager \
+helm install cert-manager  \
     --namespace cert-manager \
-    --version v1.2.0 \
-    --create-namespace \
-    --set installCRDs=true
+    --version v1.11.0 \
+    --set installCRDs=true \
+    jetstack/cert-manager
 kubectl wait --for=condition=Ready pod --all -n cert-manager
 ```
 
 ```plain
-kubectl get po -n cert-manager
+kubectl get pod -n cert-manager
 ```
 
 > Result:
 > ```plain
-> 
+> NAME                                       READY   STATUS    RESTARTS   AGE
+> cert-manager-64f9f45d6f-56nkx              1/1     Running   0          54s
+> cert-manager-cainjector-56bbdd5c47-f2vz7   1/1     Running   0          54s
+> cert-manager-webhook-d4f4545d7-zbzjd       1/1     Running   0          54s
 > ```
+
+
 
 Install certs, better resolution LetsEncrypt, Vault:
 
@@ -312,14 +321,14 @@ kubectl create -n cert-manager \
 ```
 
 ```plain
-kubectl apply -f ./labs/03/cert-manager/issuer-ca.yaml 
+kubectl apply -f ./labs/03/cert-manager/issuer-ca.yaml
 ```
 
 ```plain
 kubectl apply -f labs/03/cert-manager/certification.yaml
 ```
 
-kubectl get secrets/manager-cacerts -n istio-ingress
+kubectl get secrets/istio-gateway-cert -n istio-ingress
 
 kubectl get Certificate -n istio-ingress
 
@@ -328,7 +337,7 @@ kubectl get Certificate -n istio-ingress
 > 
 > ```
 
-Let's check the certificate SAN was specified correctly as `killer.sh`:
+Let's check the certificate SAN was specified correctly as `killercoda.com`:
 
 ```bash
 kubectl get secret -n istio-ingress manager-cacerts -o jsonpath="{.data['tls\.crt']}" | base64 -d | step certificate inspect -
