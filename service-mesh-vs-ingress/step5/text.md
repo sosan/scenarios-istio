@@ -246,7 +246,7 @@ curl -v localhost:1234/api/v1/orders
 ```{{exec}}
 
 
-
+<!-- 
 ## Ingress traffic with certification HTTPS
 
 We will create a certificate with an appropriate SAN
@@ -269,7 +269,7 @@ Example calling it:
 
 ```
 curl --cacert ./labs/04/certs/ca/root-ca.crt https://localhost --resolve localhost:443:$GATEWAY_IP
-```
+``` -->
 
 
 ## Istio Ingress Ingress Gateway traffic with Cert Manager
@@ -311,6 +311,27 @@ kubectl create -n cert-manager \
     --key ./labs/03/certs/ca/root-ca.key
 ```
 
+```plain
+kubectl apply -f ./labs/03/cert-manager/issuer-ca.yaml 
+```
 
+```plain
+kubectl apply -f labs/03/cert-manager/certification.yaml
+```
+
+kubectl get secrets/manager-cacerts -n istio-ingress
+
+kubectl get Certificate -n istio-ingress
+
+> Result:
+> ```plain
+> 
+> ```
+
+Let's check the certificate SAN was specified correctly as `killer.sh`:
+
+```bash
+kubectl get secret -n istio-ingress manager-cacerts -o jsonpath="{.data['tls\.crt']}" | base64 -d | step certificate inspect -
+```
 
 
