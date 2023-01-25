@@ -9,7 +9,7 @@ spec:
   renewBefore: 360h # 15d
   subject:
     organizations:
-    - killer.sh
+    - killercoda.com
   isCA: false
   privateKey:
     algorithm: RSA
