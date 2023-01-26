@@ -185,11 +185,11 @@ istioctl proxy-config routes deploy/istio-ingressgateway.istio-ingress -n istio-
 >               *           /stats/prometheus*     
 > ```
 
-If we wanted to see an individual route, we can ask for its output as `json` like this:
-
+If we wanted to see an individual route, we can ask for its output as `json`
+<!-- 
 ```plain
 istioctl proxy-config routes deploy/istio-ingressgateway.istio-ingress -n istio-ingress -o json | jq
-```
+``` -->
 
 
 ```plain
@@ -248,37 +248,19 @@ curl -v localhost:1234/api/v1/orders
 ```{{exec}}
 
 
-<!-- 
-## Ingress traffic with certification HTTPS
-
-We will create a certificate with an appropriate SAN
-
-```plain
-kubectl create -n istio-ingress \
-    secret tls gw-istioingress-cert \
-    --key ./labs/03/certs/key.key \
-    --cert ./labs/03/certs/cert.crt
-```
-
-_the cert must be where the gateway is actually deployed_
-
-```plain
-kubectl -n istioinaction apply -f labs/03/https-gateway.yaml
-```
-
-
-Example calling it:
-
-```
-curl --cacert ./labs/04/certs/ca/root-ca.crt https://localhost --resolve localhost:443:$GATEWAY_IP
-``` -->
-
-
 ## Istio Ingress Ingress Gateway traffic with Cert Manager
 
-In this lab, the CA will be our own CA but cert-manager can be integrated with a lot of backend PKI --- which is a big reason why cert manager is so popular. 
+In order to secure the communication for incoming traffic using HTTPS within our Kubernetes and Istio environment, we need to have a certificate that includes the correct Subject Alternative Name (SAN). We can update our gateway to use this certificate by running the following command:
 
-Preparation for installation of cert manager:
+```plain
+kubectl -n istio-lab-01 apply -f ./labs/03/https-gateway.yaml
+```{{exec}}
+
+Additionally, we can use our own Certificate Authority (CA) or integrate `cert-manager` with a variety of other backend Public Key Infrastructure (PKI) options. 
+
+This flexibility is one of the main reasons why `cert-manager` is so popular.
+
+Preparation for installation of `cert-manager`:
 
 ```plain
 kubectl create namespace cert-manager
@@ -291,14 +273,15 @@ helm install cert-manager  \
     --version v1.11.0 \
     --set installCRDs=true \
     jetstack/cert-manager
+## WAITING ...
 kubectl wait --for=condition=Ready pod --all -n cert-manager
-```
+```{{exec}}
 
 Waiting few seconds, next:
 
 ```plain
 kubectl get pod -n cert-manager
-```
+```{{exec}}
 
 > Result:
 > ```plain
@@ -315,9 +298,9 @@ kubectl create -n cert-manager \
     secret tls cert-manager-cacerts \
     --cert ./labs/03/certs/ca/root-ca.crt \
     --key ./labs/03/certs/ca/root-ca.key
-```
+```{{exec}}
 
-We will configure a `ClusterIssuer` to use a CA (Certificate Authority).
+Next we will configure a `ClusterIssuer` to use a CA (Certificate Authority).
 
 A ClusterIssuer is a resource in Kubernetes that allows you to configure a service that can provide TLS certificates (issuer) to be used by the cluster
 
@@ -344,7 +327,7 @@ kubectl get secrets/manager-cacerts -n istio-ingress
 Let's verify that the certificate was accepted and granted:
 
 ```plain
-kubectl get Certificate -n istio-ingress
+kubectl get certificate -n istio-ingress
 ```{{exec}}
 
 > Result:
