@@ -10,6 +10,3 @@ mv /tmp/demo.yaml /root/istio-${ISTIO_VERSION}/manifests/profiles/
 # ========= INSTALING ISTIO =========
 istioctl install --set profile=demo -y --manifests=/root/istio-${ISTIO_VERSION}/manifests
 # ========= INSTALLED =========
-# ====== MODE EXECUTION =======
-chmod +x ./labs/01/wait.sh
-chmod +x ./labs/02/wait.sh
