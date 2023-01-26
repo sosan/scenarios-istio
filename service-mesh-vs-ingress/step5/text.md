@@ -173,7 +173,7 @@ We can query the gateway configuration using the `istioctl proxy-config` command
 
 ```plain
 istioctl proxy-config routes deploy/istio-ingressgateway.istio-ingress -n istio-ingress
-```
+```{{exec}}
 
 > Result
 > ```plain
@@ -191,9 +191,6 @@ If we wanted to see an individual route, we can ask for its output as `json` lik
 istioctl proxy-config routes deploy/istio-ingressgateway.istio-ingress -n istio-ingress -o json | jq
 ```
 
----
----
-
 
 ```plain
 kubectl port-forward -n istio-ingress svc/istio-ingressgateway 1234:80 >> /dev/null &
@@ -205,6 +202,8 @@ Let's check if port 1234 has been opened:
 lsof -i :1234
 ```{{exec}}
 
+
+Check this endpoint: `/api/v1/follow`
 
 ```plain
 curl -v localhost:1234/api/v1/follow
@@ -236,15 +235,13 @@ Status code 200 from
 > }
 > ```
 
-
-
-Send curl direct to `Greetings` -> `Order`
+Check endpoint `/api/v1/greetings`
 
 ```plain
 curl -v localhost:1234/api/v1/greetings
 ```{{exec}}
 
-Send curl direct to `Order`
+Check endpoint `/api/v1/orders`
 
 ```plain
 curl -v localhost:1234/api/v1/orders
@@ -286,7 +283,7 @@ Preparation for installation of cert manager:
 ```plain
 kubectl create namespace cert-manager
 helm repo add jetstack https://charts.jetstack.io
-```
+```{{exec}}
 
 ```plain
 helm install cert-manager  \
@@ -296,6 +293,8 @@ helm install cert-manager  \
     jetstack/cert-manager
 kubectl wait --for=condition=Ready pod --all -n cert-manager
 ```
+
+Waiting few seconds, next:
 
 ```plain
 kubectl get pod -n cert-manager
@@ -309,28 +308,44 @@ kubectl get pod -n cert-manager
 > cert-manager-webhook-d4f4545d7-zbzjd       1/1     Running   0          54s
 > ```
 
-
-
-Install certs, better resolution LetsEncrypt, Vault:
+Installing root certs and keys (**better resolution LetsEncrypt, Vault**):
 
 ```plain
 kubectl create -n cert-manager \
-    secret tls manager-cacerts \
+    secret tls cert-manager-cacerts \
     --cert ./labs/03/certs/ca/root-ca.crt \
     --key ./labs/03/certs/ca/root-ca.key
 ```
+
+We will configure a `ClusterIssuer` to use a CA (Certificate Authority).
+
+A ClusterIssuer is a resource in Kubernetes that allows you to configure a service that can provide TLS certificates (issuer) to be used by the cluster
+
+This would allow the cluster to use the specified CA to issue TLS certificates for secure communication within the cluster.
 
 ```plain
 kubectl apply -f ./labs/03/cert-manager/issuer-ca.yaml
 ```
 
+We will ask `cert-manager` to create a `Certificate` using a specific configuration. 
+
+This `Certificate` will likely contain an TLS certificate and its associated private key that are issued by the specified Certificate Authority (CA).
+
+This `Certificate` can be used to secure communication within the cluster.
+
 ```plain
 kubectl apply -f labs/03/cert-manager/certification.yaml
 ```
 
-kubectl get secrets/istio-gateway-cert -n istio-ingress
+```plain
+kubectl get secrets/manager-cacerts -n istio-ingress
+```{{exec}}
 
+Let's verify that the certificate was accepted and granted:
+
+```plain
 kubectl get Certificate -n istio-ingress
+```{{exec}}
 
 > Result:
 > ```plain
