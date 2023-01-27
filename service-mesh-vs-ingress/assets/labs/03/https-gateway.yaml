@@ -1,10 +1,11 @@
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: istio-ingressgateway
+  # name: istio-ingressgateway
+  name: mock-apps-gateway
 spec:
   selector:
-    istio: ingressgateway 
+    istio: ingressgateway
   servers:
   - port:
       name: http
@@ -20,4 +21,4 @@ spec:
     - "*"
     tls:
       mode: SIMPLE
-      credentialName: gw-istioingress-cert
+      credentialName: cert-manager-cacerts
